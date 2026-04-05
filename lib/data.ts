@@ -27,26 +27,52 @@ export const aboutContent = {
   ],
 };
 
-export const skillCategories = [
+export type Skill = {
+  name: string;
+  logo?: string;
+  darkInvert?: boolean;
+};
+
+export const skillCategories: {
+  icon: string;
+  title: string;
+  skills: Skill[];
+}[] = [
   {
     icon: "Database",
     title: "Backend & Database",
-    skills: ["Express.js", "PostgreSQL", "RESTful API", "Client-Server Architecture"],
+    skills: [
+      { name: "Express.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg", darkInvert: true },
+      { name: "PostgreSQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
+      { name: "RESTful API" },
+      { name: "Client-Server Architecture" },
+    ],
   },
   {
     icon: "Monitor",
     title: "Frontend",
-    skills: ["React.js", "Next.js", "Tailwind CSS"],
+    skills: [
+      { name: "React.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+      { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg", darkInvert: true },
+      { name: "Tailwind CSS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+    ],
   },
   {
     icon: "Cpu",
     title: "IoT & Protocols",
-    skills: ["MQTT", "GPS/GIS Integration", "Embedded Systems"],
+    skills: [
+      { name: "MQTT", logo: "https://cdn.simpleicons.org/mqtt" },
+      { name: "GPS/GIS Integration" },
+      { name: "Embedded Systems" },
+    ],
   },
   {
     icon: "Cloud",
     title: "Cloud & Tools",
-    skills: ["AWS Cloud", "Git"],
+    skills: [
+      { name: "AWS Cloud", logo: "https://cdn.simpleicons.org/amazonaws" },
+      { name: "Git", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
+    ],
   },
 ];
 
@@ -55,6 +81,12 @@ export const projects = [
     title: "Smart Warehouse IoT Dashboard",
     description:
       "Built a real-time monitoring dashboard for smart warehouse operations, processing data from 4 IoT node systems and 8 sensor points using the MQTT protocol. Managed server-side data flow maintaining zero downtime during testing. Led development of over 80% of frontend dashboard features in a cross-functional team of 4 members.",
+    highlights: [
+      "Processed real-time data from 4 IoT nodes and 8 sensor points",
+      "Zero downtime during testing with MQTT data pipeline",
+      "Led 80%+ frontend dashboard development",
+      "Cross-functional team of 4 members",
+    ],
     tags: ["Next.js", "Express.js", "PostgreSQL", "MQTT"],
     image: "/images/project-1.svg",
     liveUrl: "#",
@@ -64,25 +96,43 @@ export const projects = [
     title: "Geolocation Asset Tracking System",
     description:
       "Designed backend architecture using Express.js and PostgreSQL to process asset management data distributed across 6 different company locations during the prototype phase. Developed a backend logic framework for spatial data processing (GIS/GPS), laying the foundation for a centralized asset tracking system responding to real-time coordinate point requests.",
+    highlights: [
+      "Backend architecture for 6 distributed company locations",
+      "Spatial data processing framework (GIS/GPS)",
+      "Real-time coordinate point request handling",
+      "Centralized asset tracking foundation",
+    ],
     tags: ["Express.js", "PostgreSQL", "GIS/GPS", "RESTful API"],
     image: "/images/project-2.svg",
     liveUrl: "#",
     sourceUrl: "#",
   },
   {
-    title: "Flood Detection & Sedimentation Prediction",
+    title: "River Monitoring & Early Warning System",
     description:
-      "Served as the sole full-stack developer in a cross-divisional collaboration with PT Toyo Sensing Indonesia. Built a complete system processing IoT sensor data streams at 5-minute intervals for real-time flood detection and sedimentation prediction. Handled end-to-end development from database design to frontend visualization.",
-    tags: ["Next.js", "Express.js", "PostgreSQL", "IoT Sensors"],
+      "Served as the sole full-stack developer in a cross-divisional collaboration with PT Toyo Sensing Indonesia. Built a real-time river condition monitoring system processing IoT sensor data streams at 5-minute intervals — tracking water quality, temperature, and water level. The system delivers automated warning notifications when readings exceed safe thresholds. Planned for future enhancement with ML-based sedimentation prediction.",
+    highlights: [
+      "Real-time monitoring of water quality, temperature & water level",
+      "Automated warning notifications for abnormal conditions",
+      "IoT sensor data streams processed at 5-minute intervals",
+      "Future roadmap: ML-based sedimentation prediction",
+    ],
+    tags: ["Next.js", "Express.js", "PostgreSQL", "IoT"],
     image: "/images/project-3.svg",
     liveUrl: "#",
     sourceUrl: "#",
   },
   {
-    title: "Laundry Business Management App",
+    title: "Laundry Management App",
     description:
-      "Developed a comprehensive web application prototype to digitize and optimize the operational management of a laundry business. Features include order tracking, customer management, and operational workflow automation.",
-    tags: ["Web Application", "Full-Stack"],
+      "Built an MVP laundry management web application to handle core business operations. Features include order registration, status tracking, and customer data management — designed as a practical solution for small laundry businesses.",
+    highlights: [
+      "MVP-focused feature set for quick deployment",
+      "Order registration and status tracking",
+      "Customer data management",
+      "Built with CodeIgniter 3 and MySQL",
+    ],
+    tags: ["CodeIgniter 3", "MySQL", "PHP", "Bootstrap"],
     image: "/images/project-4.svg",
     liveUrl: "#",
     sourceUrl: "#",

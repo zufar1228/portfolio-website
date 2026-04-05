@@ -8,18 +8,17 @@
   --font-headline: "Space Grotesk", sans-serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
 
-  /* Dark palette (default) */
-  --color-bg: #0a0a0a;
-  --color-bg-alt: #0e0e0e;
-  --color-surface: #141414;
-  --color-surface-alt: #1c1c1c;
-  --color-border: #262626;
-  --color-text: #fafafa;
-  --color-text-secondary: #737373;
-  --color-text-tertiary: #525252;
-  --color-accent: #e5e5e5;
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --color-bg: #1a1714;
+  --color-bg-alt: #1f1c17;
+  --color-surface: #252219;
+  --color-surface-alt: #2e2a21;
+  --color-border: #3d3830;
+  --color-text: #f0ebe3;
+  --color-text-secondary: #a09888;
+  --color-text-tertiary: #7a7268;
+  --color-accent: #c9a96e;
+  --font-heading: var(--font-headline);
+  --font-sans: var(--font-body);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -82,15 +81,15 @@ body {
 
 /* Light mode overrides */
 .light {
-  --color-bg: #fafafa;
-  --color-bg-alt: #f5f5f5;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f5f5f5;
-  --color-border: #e5e5e5;
-  --color-text: #0a0a0a;
-  --color-text-secondary: #525252;
-  --color-text-tertiary: #a3a3a3;
-  --color-accent: #171717;
+  --color-bg: #f5f0e8;
+  --color-bg-alt: #efe9df;
+  --color-surface: #faf7f2;
+  --color-surface-alt: #f0ebe3;
+  --color-border: #d4cdc0;
+  --color-text: #2a2520;
+  --color-text-secondary: #6b6358;
+  --color-text-tertiary: #8a8278;
+  --color-accent: #8b7340;
 }
 
 ::selection {
@@ -177,4 +176,408 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+/* ===== Dot grid pattern ===== */
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ===== Animated gradient border ===== */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.gradient-border {
+  --angle: 0deg;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    conic-gradient(from var(--angle), transparent 60%, var(--color-accent) 80%, transparent 100%) border-box;
+  animation: rotate-gradient 4s linear infinite;
+}
+
+@keyframes rotate-gradient {
+  to { --angle: 360deg; }
+}
+
+/* ===== Grain overlay (animated) ===== */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  mix-blend-mode: multiply;
+  animation: grain-shift 0.8s steps(1) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, -5%); }
+  40% { transform: translate(3%, -3%); }
+  60% { transform: translate(-3%, 5%); }
+  80% { transform: translate(5%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ===== Scan line (video preview hover) ===== */
+@keyframes scan-line {
+  0% { top: -2px; }
+  100% { top: 100%; }
+}
+.animate-scan-line {
+  animation: scan-line 1.5s ease-in-out infinite;
+}
+
+/* ===== Glow card ===== */
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--color-accent) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
+  z-index: 0;
+  pointer-events: none;
+}
+.glow-card:hover::before {
+  opacity: 0.06;
+}
+
+/* ===== Spotlight card ===== */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    200px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--color-accent)/0.3,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+.spotlight-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    350px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--color-accent)/0.06,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+.spotlight-card:hover::before,
+.spotlight-card:hover::after {
+  opacity: 1;
+}
+
+/* ===== Animated border card ===== */
+.animated-border-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: radial-gradient(
+    250px circle at var(--border-x, 50%) var(--border-y, 50%),
+    var(--color-accent),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+.animated-border-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  transition: border-color 0.5s;
+  pointer-events: none;
+}
+.animated-border-card:hover::before {
+  opacity: 1;
+}
+.animated-border-card:hover::after {
+  border-color: transparent;
+}
+
+/* ===== Skill card glow ===== */
+.skill-card-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: radial-gradient(
+    300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--color-accent),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+.skill-card-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--color-accent)/0.06,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 2;
+}
+.skill-card-glow:hover::before,
+.skill-card-glow:hover::after {
+  opacity: 1;
+}
+
+/* Light mode: softer glow, no grain */
+.light .grain::after {
+  opacity: 0;
+}
+.light .glow-card:hover::before {
+  opacity: 0.04;
+}
+.light .dot-pattern {
+  opacity: 0.08 !important;
+}
+
+/* ===== Marquee ===== */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* ===== Shimmer ===== */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--color-text) 0%,
+    var(--color-text-secondary) 50%,
+    var(--color-text) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* ===== Line animation ===== */
+@keyframes draw-line {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+/* ===== Floating ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ===== Pulse ring ===== */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* ===== Form focus glow ===== */
+.input-focus-glow:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+
+/* ===== Floating dots (CSS-only) ===== */
+@keyframes float-dot {
+  0%, 100% { transform: translate(0, 0); opacity: 0.05; }
+  25% { transform: translate(12px, -20px); opacity: 0.18; }
+  50% { transform: translate(-8px, 8px); opacity: 0.07; }
+  75% { transform: translate(15px, -12px); opacity: 0.15; }
+}
+.animate-float-dot {
+  animation: float-dot 15s ease-in-out infinite;
+}
+
+/* ===== Meteor (CSS-only) ===== */
+@keyframes meteor {
+  0% { transform: translateY(-5vh); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+.animate-meteor {
+  animation: meteor 4s linear infinite;
+}
+
+/* ===== Beam sweep (CSS-only) ===== */
+@keyframes beam-sweep {
+  0% { transform: translateY(-120%) rotate(var(--tw-rotate, 0deg)); opacity: 0; }
+  15% { opacity: var(--beam-opacity, 0.05); }
+  85% { opacity: var(--beam-opacity, 0.05); }
+  100% { transform: translateY(120%) rotate(var(--tw-rotate, 0deg)); opacity: 0; }
+}
+.animate-beam {
+  animation: beam-sweep 10s linear infinite;
+}
+
+/* ===== Aurora blobs (CSS-only) ===== */
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -25px) scale(1.05); }
+  66% { transform: translate(-15px, 15px) scale(0.97); }
+}
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-35px, 30px) scale(0.93); }
+  66% { transform: translate(20px, -15px) scale(1.03); }
+}
+.animate-aurora-1 { animation: aurora-1 25s ease-in-out infinite; }
+.animate-aurora-2 { animation: aurora-2 30s ease-in-out infinite; }
+
+/* ===== Spin (for rings) ===== */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Stagger text 3D ===== */
+@keyframes text-reveal-3d {
+  from {
+    opacity: 0;
+    transform: translateY(80px) rotateX(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+  }
+}
+
+/* ===== Gradient shine sweep ===== */
+@keyframes shine-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(200%); }
+}
+.shine-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: shine-sweep 3s ease-in-out infinite;
+}
+
+/* ===== Border beam ===== */
+@keyframes border-beam {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+.border-beam {
+  position: relative;
+  overflow: hidden;
+}
+.border-beam::before {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+  opacity: 0.5;
+  offset-path: rect(0 100% 100% 0 round 16px);
+  animation: border-beam 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== Smooth blur entrance ===== */
+@keyframes blur-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+.animate-blur-in {
+  animation: blur-in 0.8s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* ===== Clip reveal ===== */
+@keyframes clip-reveal {
+  from { clip-path: inset(100% 0% 0% 0%); }
+  to { clip-path: inset(0% 0% 0% 0%); }
+}
+
+/* ===== Text shine ===== */
+@keyframes text-shine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.text-shine {
+  background: linear-gradient(
+    90deg,
+    var(--color-text) 0%,
+    var(--color-accent) 50%,
+    var(--color-text) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shine 4s linear infinite;
 }

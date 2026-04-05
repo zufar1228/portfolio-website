@@ -41,7 +41,7 @@ export default function RootLayout({
       className={cn(spaceGrotesk.variable, plusJakarta.variable, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-screen overflow-x-hidden">
+      <body className="relative min-h-screen overflow-x-hidden">
         <Providers>{children}</Providers>
       </body>
     </html>
