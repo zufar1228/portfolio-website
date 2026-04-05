@@ -139,6 +139,7 @@ function AboutImage() {
           alt="Muhammad Zufar Natsir"
           width={600}
           height={750}
+          sizes="(max-width: 768px) 100vw, 33vw"
           className="w-full h-full object-cover"
         />
       </div>

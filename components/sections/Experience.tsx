@@ -7,6 +7,7 @@ import { experiences } from "@/lib/data";
 import Container from "../ui/Container";
 import SectionIntro from "../ui/SectionIntro";
 import SpotlightCard from "../ui/SpotlightCard";
+import TiltCard from "../ui/TiltCard";
 
 export default function Experience() {
   const sectionRef = useRef(null);
@@ -88,6 +89,7 @@ function TimelineItem({
           isEven ? "" : "md:text-left"
         }`}
       >
+        <TiltCard tiltMax={4} glare>
         <SpotlightCard className="rounded-2xl">
           <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/50 backdrop-blur-sm hover:border-[var(--color-text-tertiary)]/30 transition-all duration-300 group">
             <div className="flex items-center gap-3 mb-3">
@@ -112,6 +114,7 @@ function TimelineItem({
             </p>
           </div>
         </SpotlightCard>
+        </TiltCard>
       </motion.div>
 
       {/* Spacer for the other side */}

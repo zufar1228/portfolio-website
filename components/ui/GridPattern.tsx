@@ -75,7 +75,7 @@ export default function GridPattern({
           rx={2}
           style={{
             animation: `grid-fade-${id.replace(/:/g, "")} ${duration * 2}s ease-in-out ${sq.delay}s infinite`,
-            willChange: "opacity",
+
           }}
         />
       ))}

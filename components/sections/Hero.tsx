@@ -76,12 +76,11 @@ export default function Hero() {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.18], [1, 0.92]);
-  const filterBlur = useTransform(scrollYProgress, [0, 0.18], ["blur(0px)", "blur(10px)"]);
 
   return (
     <motion.section
       ref={containerRef}
-      style={{ opacity, scale, filter: filterBlur }}
+      style={{ opacity, scale }}
       className="min-h-screen flex flex-col justify-center items-center px-6 sm:px-8 text-center relative overflow-hidden"
     >
       {/* ---- Animated grid pattern background ---- */}

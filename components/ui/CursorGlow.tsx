@@ -28,7 +28,7 @@ export default function CursorGlow() {
         translateY: "-50%",
       }}
     >
-      <div className="w-[400px] h-[400px] rounded-full bg-[var(--color-accent)]/[0.15] blur-[60px]" />
+      <div className="w-[250px] h-[250px] rounded-full bg-[var(--color-accent)]/[0.12] blur-[40px]" />
     </motion.div>
   );
 }

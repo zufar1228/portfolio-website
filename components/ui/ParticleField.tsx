@@ -50,13 +50,16 @@ export default function ParticleField({ className = "" }: { className?: string }
       }));
     };
 
+    // Cache accent color, update on theme change
+    let accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#c9a96e";
+    const themeObserver = new MutationObserver(() => {
+      accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#c9a96e";
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
     const animate = () => {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
-
-      const accent = getComputedStyle(document.documentElement)
-        .getPropertyValue("--color-accent")
-        .trim();
 
       // Update & draw particles
       for (let i = 0; i < particles.length; i++) {
@@ -125,13 +128,19 @@ export default function ParticleField({ className = "" }: { className?: string }
 
     init();
     animate();
-    window.addEventListener("resize", resize);
+    let resizeRaf: number;
+    const debouncedResize = () => {
+      cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(resize);
+    };
+    window.addEventListener("resize", debouncedResize);
     canvas.addEventListener("mousemove", handleMouse);
     canvas.addEventListener("mouseleave", handleLeave);
 
     return () => {
       cancelAnimationFrame(animRef.current);
-      window.removeEventListener("resize", resize);
+      themeObserver.disconnect();
+      window.removeEventListener("resize", debouncedResize);
       canvas.removeEventListener("mousemove", handleMouse);
       canvas.removeEventListener("mouseleave", handleLeave);
     };

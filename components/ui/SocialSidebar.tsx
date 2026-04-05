@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Mail } from "lucide-react";
+import { useState, useEffect } from "react";
 import { contactInfo } from "@/lib/data";
 import MagneticWrap from "./MagneticWrap";
 
@@ -30,13 +31,38 @@ const socials = [
   { icon: Mail, href: `mailto:${contactInfo.email}`, label: "Email" },
 ];
 
+function useIsInProjectsSection() {
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const el = document.getElementById("projects");
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setHidden(entry.isIntersecting),
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return hidden;
+}
+
 export default function SocialSidebar() {
+  const hidden = useIsInProjectsSection();
+
   return (
     <motion.div
       className="fixed left-6 bottom-0 z-50 hidden lg:flex flex-col items-center gap-5"
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 3, duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
+      animate={{
+        opacity: hidden ? 0 : 1,
+        x: hidden ? -40 : 0,
+        y: hidden ? 0 : 0,
+      }}
+      transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+      style={{ pointerEvents: hidden ? "none" : "auto" }}
     >
       {socials.map((social) => (
         <MagneticWrap key={social.label} strength={0.4}>

@@ -23,11 +23,8 @@ export default function CustomCursor() {
   );
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mousedown", () => setClicking(true));
-    window.addEventListener("mouseup", () => setClicking(false));
-
-    // Detect hoverable elements 
+    const handleDown = () => setClicking(true);
+    const handleUp = () => setClicking(false);
     const handleOver = (e: Event) => {
       const target = e.target as HTMLElement;
       if (!target) return;
@@ -38,17 +35,24 @@ export default function CustomCursor() {
       else setHoverState("default");
     };
 
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleDown);
+    window.addEventListener("mouseup", handleUp);
     document.addEventListener("mouseover", handleOver);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleDown);
+      window.removeEventListener("mouseup", handleUp);
       document.removeEventListener("mouseover", handleOver);
     };
   }, [handleMouseMove]);
 
   const ringSize = hoverState === "link" ? 50 : hoverState === "text" ? 40 : 36;
-  const dotSize = clicking ? 4 : 6;
-  const ringOpacity = hoverState === "link" ? 0.4 : 0.2;
+  const dotSize = clicking ? 4 : hoverState === "link" ? 0 : 6;
+  const ringOpacity = hoverState === "link" ? 0.5 : 0.2;
+  const ringBorderWidth = hoverState === "link" ? 2 : 1;
+  const ringBg = hoverState === "link" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0)";
 
   return (
     <>
@@ -88,7 +92,8 @@ export default function CustomCursor() {
             width: ringSize,
             height: ringSize,
             opacity: ringOpacity,
-            borderWidth: hoverState === "link" ? 2 : 1,
+            borderWidth: ringBorderWidth,
+            backgroundColor: ringBg,
           }}
           transition={{ type: "spring" as const, stiffness: 300, damping: 25 }}
         />

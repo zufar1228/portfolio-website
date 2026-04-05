@@ -35,7 +35,7 @@ export default function FloatingDots({ count = 30 }: FloatingDotsProps) {
             height: d.size,
             animationDuration: `${d.duration}s`,
             animationDelay: `${d.delay}s`,
-            willChange: "transform, opacity",
+
           }}
         />
       ))}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Database, Monitor, Cpu, Cloud } from "lucide-react";
-import { motion, useInView, useMotionValue } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef, useCallback } from "react";
 import { skillCategories } from "@/lib/data";
 import Container from "../ui/Container";

@@ -1,21 +1,29 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 
 interface MeteorsProps {
   count?: number;
 }
 
 export default function Meteors({ count = 12 }: MeteorsProps) {
-  const meteors = useMemo(() => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      delay: Math.random() * 10,
-      duration: 3 + Math.random() * 5,
-      size: 1 + Math.random() * 1.5,
-    }));
+  const [meteors, setMeteors] = useState<
+    { id: number; left: string; delay: number; duration: number; size: number }[]
+  >([]);
+
+  useEffect(() => {
+    setMeteors(
+      Array.from({ length: count }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        delay: Math.random() * 10,
+        duration: 3 + Math.random() * 5,
+        size: 1 + Math.random() * 1.5,
+      }))
+    );
   }, [count]);
+
+  if (meteors.length === 0) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
