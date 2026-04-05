@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  const dotX = useSpring(cursorX, { damping: 35, stiffness: 400 });
-  const dotY = useSpring(cursorY, { damping: 35, stiffness: 400 });
-  const ringX = useSpring(cursorX, { damping: 20, stiffness: 150 });
-  const ringY = useSpring(cursorY, { damping: 20, stiffness: 150 });
+  const ringX = useSpring(cursorX, { damping: 28, stiffness: 600, mass: 0.5 });
+  const ringY = useSpring(cursorY, { damping: 28, stiffness: 600, mass: 0.5 });
 
   const [hoverState, setHoverState] = useState<"default" | "link" | "text">("default");
   const [clicking, setClicking] = useState(false);
@@ -49,7 +47,7 @@ export default function CustomCursor() {
   }, [handleMouseMove]);
 
   const ringSize = hoverState === "link" ? 50 : hoverState === "text" ? 40 : 36;
-  const dotSize = clicking ? 4 : hoverState === "link" ? 0 : 6;
+  const dotSize = clicking ? 4 : 6;
   const ringOpacity = hoverState === "link" ? 0.5 : 0.2;
   const ringBorderWidth = hoverState === "link" ? 2 : 1;
   const ringBg = hoverState === "link" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0)";
@@ -60,8 +58,8 @@ export default function CustomCursor() {
       <motion.div
         className="pointer-events-none fixed z-[9999] hidden md:block mix-blend-difference"
         style={{
-          x: dotX,
-          y: dotY,
+          x: cursorX,
+          y: cursorY,
           translateX: "-50%",
           translateY: "-50%",
         }}
