@@ -59,21 +59,20 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
 
   return (
     <motion.section
       ref={containerRef}
-      style={{ opacity, scale }}
+      style={{ opacity }}
       className="min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 relative overflow-hidden pt-24 sm:pt-20 pb-16"
     >
       {/* ---- Animated grid pattern background ---- */}
-      <GridPattern width={60} height={60} numSquares={16} maxOpacity={0.12} duration={4} />
+      <GridPattern width={60} height={60} numSquares={10} maxOpacity={0.1} duration={4} />
 
       {/* ---- Single subtle aurora blob ---- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div
-          className="absolute -top-1/2 -left-1/4 w-[70vw] h-[70vw] rounded-full animate-aurora-1"
+          className="absolute -top-1/2 -left-1/4 w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] rounded-full"
           style={{ background: "radial-gradient(circle, var(--color-accent)/0.04 0%, transparent 70%)" }}
         />
       </div>

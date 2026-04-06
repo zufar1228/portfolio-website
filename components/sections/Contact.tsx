@@ -140,7 +140,7 @@ export default function Contact() {
 
           {/* Right side - Form */}
           <Reveal delay={0.2} className="lg:col-span-7">
-            <AnimatedBorderCard innerClassName="relative overflow-hidden bg-[var(--color-surface)]/30 backdrop-blur-sm">
+            <AnimatedBorderCard innerClassName="relative overflow-hidden bg-[var(--color-surface)]/50">
               {/* Decorative corner */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent)]/[0.03] blur-[40px] rounded-full" />
 
@@ -154,6 +154,10 @@ export default function Contact() {
                   const name = formData.get("name") as string;
                   const email = formData.get("email") as string;
                   const message = formData.get("message") as string;
+                  const honeypot = formData.get("website") as string;
+
+                  // Bot check
+                  if (honeypot) return;
 
                   const errs = validate(name, email, message);
                   setErrors(errs);
@@ -185,6 +189,8 @@ export default function Contact() {
                 }}
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Honeypot — hidden from humans, traps bots */}
+                  <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
                   <div className="space-y-2">
                     <label htmlFor="name" className="font-body text-xs text-[var(--color-text-secondary)]">
                       Full Name
@@ -195,11 +201,13 @@ export default function Contact() {
                       type="text"
                       required
                       placeholder="John Doe"
+                      aria-describedby={errors.name ? "name-error" : undefined}
+                      aria-invalid={!!errors.name}
                       onChange={() => errors.name && setErrors((p) => { const { name: _, ...rest } = p; return rest; })}
                       className={`w-full bg-[var(--color-bg-alt)] border ${errors.name ? "border-red-500" : "border-[var(--color-border)]"} rounded-xl py-3 px-4 focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-colors font-body text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none input-focus-glow`}
                     />
                     {errors.name && (
-                      <p className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
+                      <p id="name-error" role="alert" className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
                         <AlertCircle size={12} /> {errors.name}
                       </p>
                     )}
@@ -214,11 +222,13 @@ export default function Contact() {
                       type="email"
                       required
                       placeholder="john@example.com"
+                      aria-describedby={errors.email ? "email-error" : undefined}
+                      aria-invalid={!!errors.email}
                       onChange={() => errors.email && setErrors((p) => { const { email: _, ...rest } = p; return rest; })}
                       className={`w-full bg-[var(--color-bg-alt)] border ${errors.email ? "border-red-500" : "border-[var(--color-border)]"} rounded-xl py-3 px-4 focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-colors font-body text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none input-focus-glow`}
                     />
                     {errors.email && (
-                      <p className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
+                      <p id="email-error" role="alert" className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
                         <AlertCircle size={12} /> {errors.email}
                       </p>
                     )}
@@ -235,11 +245,13 @@ export default function Contact() {
                     rows={5}
                     required
                     placeholder="Tell me about your project..."
+                    aria-describedby={errors.message ? "message-error" : undefined}
+                    aria-invalid={!!errors.message}
                     onChange={() => errors.message && setErrors((p) => { const { message: _, ...rest } = p; return rest; })}
                     className={`w-full bg-[var(--color-bg-alt)] border ${errors.message ? "border-red-500" : "border-[var(--color-border)]"} rounded-xl py-3 px-4 focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-colors font-body text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none resize-none input-focus-glow`}
                   />
                   {errors.message && (
-                    <p className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
+                    <p id="message-error" role="alert" className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
                       <AlertCircle size={12} /> {errors.message}
                     </p>
                   )}

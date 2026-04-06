@@ -3,7 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, message } = body;
+    const { name, email, message, website } = body;
+
+    // Honeypot — bots fill this hidden field
+    if (website) {
+      return NextResponse.json({ success: true });
+    }
 
     // Basic validation
     if (!name || !email || !message) {

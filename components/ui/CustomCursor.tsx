@@ -58,7 +58,7 @@ export default function CustomCursor() {
   const dotSize = clicking ? 6 : 10;
   const ringOpacity = hoverState === "link" ? 0.6 : 0.3;
   const ringBorderWidth = hoverState === "link" ? 3 : 2;
-  const ringBg = hoverState === "link" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0)";
+  const ringBg = hoverState === "link" ? "rgba(255,255,255,0.08)" : "transparent";
 
   return (
     <>

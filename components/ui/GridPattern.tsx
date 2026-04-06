@@ -24,11 +24,15 @@ export default function GridPattern({
   const [squares, setSquares] = useState<{ id: number; row: number; col: number; delay: number; speed: number }[]>([]);
 
   useEffect(() => {
-    const cols = Math.ceil(window.innerWidth / width) + 1;
+    const screenW = window.innerWidth;
+    const isMobile = screenW < 768;
+    const isHighRes = screenW >= 2000;
+    const count = isMobile ? Math.min(numSquares, 6) : isHighRes ? Math.min(numSquares, 8) : numSquares;
+    const cols = Math.ceil(screenW / width) + 1;
     const rows = Math.ceil(window.innerHeight / height) + 1;
 
     setSquares(
-      Array.from({ length: numSquares }, (_, i) => ({
+      Array.from({ length: count }, (_, i) => ({
         id: i,
         col: Math.floor(Math.random() * cols),
         row: Math.floor(Math.random() * rows),

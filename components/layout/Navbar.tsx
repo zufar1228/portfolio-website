@@ -51,7 +51,7 @@ export default function Navbar() {
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`fixed top-0 w-full z-50 flex justify-between items-center px-6 sm:px-8 py-5 transition-colors duration-300 ${
           scrolled
-            ? "bg-[var(--color-bg)]/70 backdrop-blur-2xl border-b border-[var(--color-border)]/50"
+            ? "bg-[var(--color-bg)]/80 backdrop-blur-md border-b border-[var(--color-border)]/50"
             : "bg-transparent"
         }`}
       >
@@ -104,6 +104,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(true)}
             className="md:hidden text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
             aria-label="Open menu"
+            aria-expanded={menuOpen}
           >
             <Menu size={24} />
           </button>

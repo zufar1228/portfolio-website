@@ -24,7 +24,7 @@ export default function EasterEgg() {
         indexRef.current = 0;
 
         // Generate confetti particles
-        const newParticles = Array.from({ length: 40 }, (_, i) => ({
+        const newParticles = Array.from({ length: 20 }, (_, i) => ({
           id: Date.now() + i,
           x: Math.random() * 100,
           y: Math.random() * 100,
