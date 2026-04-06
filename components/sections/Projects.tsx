@@ -176,15 +176,12 @@ const FullScreenCard = memo(function FullScreenCard({
 
   return (
     <div className="w-screen shrink-0 flex items-stretch px-2 sm:px-3 md:px-6 pb-4 sm:pb-6">
-      <motion.div
-        className="relative flex-1 rounded-2xl overflow-hidden border bg-[var(--color-surface)]/30 group"
-        animate={{
-          borderColor: isActive
-            ? "var(--color-accent)"
-            : "var(--color-border)",
+      <div
+        className="relative flex-1 rounded-2xl overflow-hidden border bg-[var(--color-surface)]/30 group transition-all duration-500 ease-out"
+        style={{
+          borderColor: isActive ? "var(--color-accent)" : "var(--color-border)",
           opacity: isActive ? 1 : 0.6,
         }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
       >
         {/* Background image with parallax */}
         <motion.div
@@ -205,61 +202,44 @@ const FullScreenCard = memo(function FullScreenCard({
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)]/70 via-transparent to-transparent" />
 
         {/* Active indicator — accent side bar */}
-        <motion.div
-          className="absolute left-0 top-[10%] bottom-[10%] w-[3px] rounded-full bg-[var(--color-accent)]"
-          animate={{ opacity: isActive ? 1 : 0, scaleY: isActive ? 1 : 0 }}
-          transition={{ duration: 0.4 }}
+        <div
+          className="absolute left-0 top-[10%] bottom-[10%] w-[3px] rounded-full bg-[var(--color-accent)] transition-all duration-400"
+          style={{ opacity: isActive ? 1 : 0, transform: `scaleY(${isActive ? 1 : 0})` }}
         />
 
         {/* Content overlay */}
         <div className="relative z-10 h-full flex flex-col justify-end p-4 sm:p-6 md:p-10 lg:p-14 max-w-2xl">
 
           {/* Featured badge */}
-          <motion.div
-            className="relative flex items-center gap-3 mb-4"
-            animate={{
-              opacity: isActive ? 1 : 0.4,
-              y: isActive ? 0 : 10,
-            }}
-            transition={{ duration: 0.5, delay: 0.05 }}
+          <div
+            className="relative flex items-center gap-3 mb-4 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.4, transform: `translateY(${isActive ? 0 : 10}px)` }}
           >
             {index === 0 && (
               <span className="px-3 py-1 text-[10px] font-body tracking-widest uppercase bg-[var(--color-accent)]/10 text-[var(--color-accent)] rounded-full border border-[var(--color-accent)]/20 backdrop-blur-sm">
                 Featured
               </span>
             )}
-          </motion.div>
+          </div>
 
-          <motion.h3
-            className="relative font-headline text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-2 sm:mb-3"
-            animate={{
-              opacity: isActive ? 1 : 0.4,
-              y: isActive ? 0 : 12,
-            }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          <h3
+            className="relative font-headline text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-2 sm:mb-3 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.4, transform: `translateY(${isActive ? 0 : 12}px)` }}
           >
             {project.title}
-          </motion.h3>
+          </h3>
 
-          <motion.p
-            className="relative font-body text-[var(--color-text)] text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-5 line-clamp-2 sm:line-clamp-3 md:line-clamp-none opacity-80"
-            animate={{
-              opacity: isActive ? 0.8 : 0.3,
-              y: isActive ? 0 : 14,
-            }}
-            transition={{ duration: 0.5, delay: 0.15 }}
+          <p
+            className="relative font-body text-[var(--color-text)] text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-5 line-clamp-2 sm:line-clamp-3 md:line-clamp-none transition-all duration-500"
+            style={{ opacity: isActive ? 0.8 : 0.3, transform: `translateY(${isActive ? 0 : 14}px)` }}
           >
             {project.description}
-          </motion.p>
+          </p>
 
           {/* Tags */}
-          <motion.div
-            className="relative flex flex-wrap gap-2 mb-6"
-            animate={{
-              opacity: isActive ? 1 : 0.3,
-              y: isActive ? 0 : 16,
-            }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+          <div
+            className="relative flex flex-wrap gap-2 mb-6 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.3, transform: `translateY(${isActive ? 0 : 16}px)` }}
           >
             {project.tags.map((tag) => (
               <span
@@ -269,16 +249,12 @@ const FullScreenCard = memo(function FullScreenCard({
                 {tag}
               </span>
             ))}
-          </motion.div>
+          </div>
 
-          {/* Links with MagneticWrap */}
-          <motion.div
-            className="relative flex gap-6"
-            animate={{
-              opacity: isActive ? 1 : 0.3,
-              y: isActive ? 0 : 18,
-            }}
-            transition={{ duration: 0.5, delay: 0.25 }}
+          {/* Links */}
+          <div
+            className="relative flex gap-6 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.3, transform: `translateY(${isActive ? 0 : 18}px)` }}
           >
             {project.liveUrl && (
               <MagneticWrap strength={0.2}>
@@ -328,14 +304,14 @@ const FullScreenCard = memo(function FullScreenCard({
                 </a>
               </MagneticWrap>
             )}
-          </motion.div>
+          </div>
         </div>
 
         {/* Right-side counter */}
         <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 font-headline text-xs text-[var(--color-text-tertiary)]">
           {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 });

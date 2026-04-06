@@ -35,7 +35,7 @@ export default function Contact() {
     <section id="contact" className="py-16 sm:py-32 relative overflow-hidden" ref={ref}>
       {/* Animated grid background */}
       <div className="absolute inset-0 bg-[var(--color-bg-alt)]" />
-      <GridPattern width={70} height={70} numSquares={12} maxOpacity={0.08} duration={4} />
+      <GridPattern width={70} height={70} numSquares={6} maxOpacity={0.06} duration={5} />
 
       <Container className="relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">

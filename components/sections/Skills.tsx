@@ -138,7 +138,7 @@ export default function Skills() {
   return (
     <section id="skills" className="py-16 sm:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-[var(--color-bg-alt)]" />
-      <GridPattern width={50} height={50} numSquares={16} maxOpacity={0.1} duration={4} />
+      <GridPattern width={50} height={50} numSquares={8} maxOpacity={0.08} duration={5} />
 
       <Container className="relative">
         <SectionIntro number="01" label="Skills" title="Technologies I work with" />

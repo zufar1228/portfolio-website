@@ -19,7 +19,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://zufarnatsir.dev"),
+  metadataBase: new URL("https://zufarnats.dev"),
   title: "Muhammad Zufar Natsir | Software & IoT Developer",
   description:
     "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights — from warehouse monitoring to geolocation asset tracking.",
@@ -58,7 +58,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               name: "Muhammad Zufar Natsir",
-              url: "https://zufarnatsir.dev",
+              url: "https://zufarnats.dev",
               jobTitle: "Software & IoT Developer",
               description:
                 "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
