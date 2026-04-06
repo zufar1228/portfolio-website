@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useEffect, useMemo, memo } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { useRef, useState, useEffect, useMemo, memo, useCallback } from "react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { projects } from "@/lib/data";
 import MagneticWrap from "../ui/MagneticWrap";
 
@@ -17,7 +17,27 @@ export default function Projects() {
 
   const [scrollRange, setScrollRange] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(false);
   const count = projects.length;
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Show "Keep scrolling!" after 2s idle, hide on scroll
+  const resetIdleTimer = useCallback(() => {
+    setShowScrollHint(false);
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => setShowScrollHint(true), 2000);
+  }, []);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const idx = Math.min(count - 1, Math.floor(v * count));
+    setActiveIndex((prev) => (prev !== idx ? idx : prev));
+    // Hide hint on scroll, restart idle timer — but not at very end
+    if (v < 0.95) resetIdleTimer();
+    else {
+      setShowScrollHint(false);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    }
+  });
 
   useEffect(() => {
     const measure = () => {
@@ -37,11 +57,10 @@ export default function Projects() {
     return () => window.removeEventListener("resize", debouncedMeasure);
   }, []);
 
-  // Track active card index from scroll progress
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const idx = Math.min(count - 1, Math.floor(v * count));
-    setActiveIndex((prev) => (prev !== idx ? idx : prev));
-  });
+  // Cleanup idle timer
+  useEffect(() => {
+    return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
+  }, []);
 
   // Build snap-point input/output arrays
   const { inputRange, outputRange } = useMemo(() => {
@@ -139,6 +158,15 @@ export default function Projects() {
             />
           ))}
         </motion.div>
+
+        {/* Keep scrolling hint */}
+        <div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 transition-opacity duration-500"
+          style={{ opacity: showScrollHint ? 1 : 0, pointerEvents: "none" }}
+        >
+          <span className="text-xs font-body text-[var(--color-text-tertiary)] tracking-wide">Keep scrolling!</span>
+          <ChevronDown size={16} className="text-[var(--color-text-tertiary)] animate-bounce" />
+        </div>
       </div>
     </section>
   );
