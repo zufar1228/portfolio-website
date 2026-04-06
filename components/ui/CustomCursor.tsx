@@ -11,6 +11,11 @@ export default function CustomCursor() {
 
   const [hoverState, setHoverState] = useState<"default" | "link" | "text">("default");
   const [clicking, setClicking] = useState(false);
+  const [isFinePointer, setIsFinePointer] = useState(false);
+
+  useEffect(() => {
+    setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
@@ -21,6 +26,7 @@ export default function CustomCursor() {
   );
 
   useEffect(() => {
+    if (!isFinePointer) return;
     const handleDown = () => setClicking(true);
     const handleUp = () => setClicking(false);
     const handleOver = (e: Event) => {
@@ -44,7 +50,9 @@ export default function CustomCursor() {
       window.removeEventListener("mouseup", handleUp);
       document.removeEventListener("mouseover", handleOver);
     };
-  }, [handleMouseMove]);
+  }, [handleMouseMove, isFinePointer]);
+
+  if (!isFinePointer) return null;
 
   const ringSize = hoverState === "link" ? 55 : hoverState === "text" ? 44 : 40;
   const dotSize = clicking ? 6 : 10;

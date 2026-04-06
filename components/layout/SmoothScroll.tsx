@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 
-const SNAP_SECTIONS = ["#about", "#skills"];
+const SNAP_SECTIONS = ["#skills"];
 const SNAP_THRESHOLD = 120; // px from top to trigger snap
 const SNAP_DEBOUNCE = 150; // ms after scroll stops
 

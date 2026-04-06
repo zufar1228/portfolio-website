@@ -14,7 +14,6 @@ import Preloader from "@/components/ui/Preloader";
 import SocialSidebar from "@/components/ui/SocialSidebar";
 import EasterEgg from "@/components/ui/EasterEgg";
 import SectionDivider from "@/components/ui/SectionDivider";
-import SectionTransition from "@/components/ui/SectionTransition";
 import AiChat from "@/components/sections/AiChat";
 
 export default function Home() {
@@ -31,22 +30,14 @@ export default function Home() {
       <Navbar />
       <main id="main-content" className="relative">
         <Hero />
-        <SectionTransition>
-          <Services />
-        </SectionTransition>
+        <Services />
         <SectionDivider variant="diamond" />
-        <SectionTransition>
-          <Skills />
-        </SectionTransition>
+        <Skills />
         <SectionDivider variant="dots" />
         <Projects />
-        <SectionTransition>
-          <Experience />
-        </SectionTransition>
+        <Experience />
         <SectionDivider variant="line" />
-        <SectionTransition>
-          <Contact />
-        </SectionTransition>
+        <Contact />
       </main>
       <Footer />
     </>

@@ -54,9 +54,12 @@ function StaggerChars({
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.18], [1, 0.92]);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
 
   return (
     <motion.section
@@ -65,7 +68,7 @@ export default function Hero() {
       className="min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 relative overflow-hidden pt-24 sm:pt-20 pb-16"
     >
       {/* ---- Animated grid pattern background ---- */}
-      <GridPattern width={60} height={60} numSquares={30} maxOpacity={0.15} duration={3} />
+      <GridPattern width={60} height={60} numSquares={16} maxOpacity={0.12} duration={4} />
 
       {/* ---- Single subtle aurora blob ---- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -122,7 +125,7 @@ export default function Hero() {
             className="font-body text-base sm:text-xl md:text-2xl text-[var(--color-text-secondary)] font-light min-h-[1.5em]"
           >
             <Typewriter
-              words={["Software Developer", "IoT Engineer", "Backend Developer"]}
+              words={["Software Developer", "IoT Engineer"]}
             />
           </motion.div>
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect, useMemo, memo } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/data";
 import MagneticWrap from "../ui/MagneticWrap";
@@ -40,7 +40,7 @@ export default function Projects() {
   // Track active card index from scroll progress
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     const idx = Math.min(count - 1, Math.floor(v * count));
-    setActiveIndex(idx);
+    setActiveIndex((prev) => (prev !== idx ? idx : prev));
   });
 
   // Build snap-point input/output arrays
@@ -153,7 +153,7 @@ export default function Projects() {
   );
 }
 
-function FullScreenCard({
+const FullScreenCard = memo(function FullScreenCard({
   project,
   index,
   total,
@@ -338,4 +338,4 @@ function FullScreenCard({
       </motion.div>
     </div>
   );
-}
+});
