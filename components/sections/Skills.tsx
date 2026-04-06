@@ -82,8 +82,6 @@ function SkillCard({ cat, index, isInView }: { cat: (typeof skillCategories)[0];
             <div className="flex items-center gap-4">
               <motion.div
                 className="w-12 h-12 rounded-xl bg-[var(--color-bg-alt)] flex items-center justify-center group-hover:bg-[var(--color-accent)]/10 transition-colors duration-300"
-                whileHover={{ rotate: [0, -10, 10, 0] }}
-                transition={{ duration: 0.5 }}
               >
                 {Icon && (
                   <Icon
@@ -108,9 +106,7 @@ function SkillCard({ cat, index, isInView }: { cat: (typeof skillCategories)[0];
                   initial={{ opacity: 0, scale: 0.8, y: 10 }}
                   animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
                   transition={{ delay: index * 0.15 + j * 0.07 + 0.3, type: "spring", stiffness: 260, damping: 20 }}
-                  whileHover={{ scale: 1.08, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-bg-alt)] text-[var(--color-text-secondary)] text-[12px] font-body rounded-full border border-[var(--color-border)]/50 hover:border-[var(--color-accent)]/40 hover:text-[var(--color-text)] hover:shadow-[0_0_12px_var(--color-accent)/0.15] transition-all duration-300 cursor-default"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-bg-alt)] text-[var(--color-text-secondary)] text-[12px] font-body rounded-full border border-[var(--color-border)]/50 hover:border-[var(--color-accent)]/40 hover:text-[var(--color-text)] hover:shadow-[0_0_12px_var(--color-accent)/0.15] hover:scale-105 hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 cursor-default"
                 >
                   {skill.logo && (
                     <img

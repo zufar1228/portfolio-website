@@ -61,6 +61,12 @@ export default function AiChat() {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputValueRef = useRef("");
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    inputValueRef.current = input;
+  }, [input]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -76,7 +82,7 @@ export default function AiChat() {
 
   const handleSend = useCallback(
     (text?: string) => {
-      const msg = (text || input).trim();
+      const msg = (text || inputValueRef.current).trim();
       if (!msg || isTyping) return;
 
       const userMsg: Message = {
@@ -100,7 +106,7 @@ export default function AiChat() {
         setIsTyping(false);
       }, 600 + Math.random() * 800);
     },
-    [input, isTyping]
+    [isTyping]
   );
 
   const [showHint, setShowHint] = useState(false);

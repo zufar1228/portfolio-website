@@ -112,12 +112,7 @@ export default function Projects() {
               {String(activeIndex + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
             </span>
             <div className="flex items-center gap-1.5">
-              <motion.span
-                animate={{ x: [0, 4, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                →
-              </motion.span>
+              <span>→</span>
               <span className="hidden sm:inline">Scroll to explore</span>
             </div>
           </div>
@@ -168,7 +163,7 @@ const FullScreenCard = memo(function FullScreenCard({
   scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
   count: number;
 }) {
-  // Parallax: image moves slower than content
+  // Parallax: image moves slower than content — only compute for nearby cards
   const segStart = index / count;
   const segEnd = (index + 1) / count;
   const imgX = useTransform(scrollYProgress, [segStart, segEnd], [30, -30]);
@@ -186,7 +181,7 @@ const FullScreenCard = memo(function FullScreenCard({
         {/* Background image with parallax */}
         <motion.div
           className="absolute inset-0"
-          style={{ x: imgX, scale: imgScale }}
+          style={isActive ? { x: imgX, scale: imgScale } : undefined}
         >
           <Image
             src={project.image}

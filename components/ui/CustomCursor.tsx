@@ -72,13 +72,9 @@ export default function CustomCursor() {
           translateY: "-50%",
         }}
       >
-        <motion.div
-          className="rounded-full bg-white"
-          animate={{
-            width: dotSize,
-            height: dotSize,
-          }}
-          transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
+        <div
+          className="rounded-full bg-white transition-[width,height] duration-150 ease-out"
+          style={{ width: dotSize, height: dotSize }}
         />
       </motion.div>
 
@@ -92,16 +88,15 @@ export default function CustomCursor() {
           translateY: "-50%",
         }}
       >
-        <motion.div
-          className="rounded-full border border-white"
-          animate={{
+        <div
+          className="rounded-full border border-white transition-all duration-200 ease-out"
+          style={{
             width: ringSize,
             height: ringSize,
             opacity: ringOpacity,
             borderWidth: ringBorderWidth,
             backgroundColor: ringBg,
           }}
-          transition={{ type: "spring" as const, stiffness: 300, damping: 25 }}
         />
       </motion.div>
     </>
