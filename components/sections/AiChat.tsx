@@ -62,6 +62,19 @@ export default function AiChat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputValueRef = useRef("");
+  const [hiddenBySection, setHiddenBySection] = useState(false);
+
+  // Hide button when projects section is in view
+  useEffect(() => {
+    const projectsEl = document.getElementById("projects");
+    if (!projectsEl) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHiddenBySection(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(projectsEl);
+    return () => observer.disconnect();
+  }, []);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -109,46 +122,15 @@ export default function AiChat() {
     [isTyping]
   );
 
-  const [showHint, setShowHint] = useState(false);
-
-  // Show attention hint after page load
-  useEffect(() => {
-    const timer = setTimeout(() => setShowHint(true), 3500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Hide hint when chat is opened
-  useEffect(() => {
-    if (isOpen) setShowHint(false);
-  }, [isOpen]);
-
   return (
     <>
       {/* Floating toggle button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        {/* Attention hint tooltip */}
-        <AnimatePresence>
-          {showHint && !isOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: 10, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 10, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
-              className="absolute bottom-full right-0 mb-3 whitespace-nowrap"
-            >
-              <div className="relative px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur-md shadow-lg">
-                <p className="text-xs font-body text-[var(--color-text)]">
-                  <span className="mr-1.5">👋</span> Ask my AI assistant anything!
-                </p>
-                {/* Arrow pointing to button */}
-                <div className="absolute -bottom-1.5 right-5 w-3 h-3 rotate-45 border-r border-b border-[var(--color-border)] bg-[var(--color-surface)]/95" />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
+      <div
+        className="fixed bottom-6 right-6 z-50 transition-opacity duration-300"
+        style={{ opacity: hiddenBySection && !isOpen ? 0 : 1, pointerEvents: hiddenBySection && !isOpen ? "none" : "auto" }}
+      >
         {/* Ping ring */}
-        {!isOpen && showHint && (
+        {!isOpen && (
           <span className="absolute inset-0 rounded-full animate-ping bg-[var(--color-accent)]/30" />
         )}
 
