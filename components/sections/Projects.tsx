@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useEffect, useMemo, memo } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/data";
@@ -67,8 +67,7 @@ export default function Projects() {
     return { inputRange: inp, outputRange: out };
   }, [scrollRange, count]);
 
-  const rawX = useTransform(scrollYProgress, inputRange, outputRange);
-  const x = useSpring(rawX, { stiffness: 200, damping: 35, mass: 0.8 });
+  const x = useTransform(scrollYProgress, inputRange, outputRange);
   const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
@@ -96,15 +95,13 @@ export default function Projects() {
             {/* Dot indicators */}
             <div className="hidden sm:flex items-center gap-2">
               {projects.map((_, i) => (
-                <motion.div
+                <div
                   key={i}
-                  className="rounded-full bg-[var(--color-accent)]"
-                  animate={{
+                  className="rounded-full bg-[var(--color-accent)] h-1.5 transition-all duration-300 ease-out"
+                  style={{
                     width: activeIndex === i ? 24 : 6,
-                    height: 6,
                     opacity: activeIndex === i ? 1 : 0.3,
                   }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               ))}
             </div>
@@ -128,7 +125,7 @@ export default function Projects() {
         {/* Full-screen horizontal scroll track */}
         <motion.div
           ref={trackRef}
-          style={{ x, willChange: "transform" }}
+          style={{ x }}
           className="flex-1 flex items-stretch gap-0 mt-4"
         >
           {projects.map((project, i) => (
@@ -138,8 +135,6 @@ export default function Projects() {
               index={i}
               total={projects.length}
               isActive={activeIndex === i}
-              scrollYProgress={scrollYProgress}
-              count={count}
             />
           ))}
         </motion.div>
@@ -153,36 +148,23 @@ const FullScreenCard = memo(function FullScreenCard({
   index,
   total,
   isActive,
-  scrollYProgress,
-  count,
 }: {
   project: (typeof projects)[0];
   index: number;
   total: number;
   isActive: boolean;
-  scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
-  count: number;
 }) {
-  // Parallax: image moves slower than content — only compute for nearby cards
-  const segStart = index / count;
-  const segEnd = (index + 1) / count;
-  const imgX = useTransform(scrollYProgress, [segStart, segEnd], [30, -30]);
-  const imgScale = useTransform(scrollYProgress, [segStart, segEnd], [1.08, 1]);
-
   return (
     <div className="w-screen shrink-0 flex items-stretch px-2 sm:px-3 md:px-6 pb-4 sm:pb-6">
       <div
-        className="relative flex-1 rounded-2xl overflow-hidden border bg-[var(--color-surface)]/30 group transition-all duration-500 ease-out"
+        className="relative flex-1 rounded-2xl overflow-hidden border bg-[var(--color-surface)]/30 group transition-[border-color,opacity] duration-500 ease-out"
         style={{
           borderColor: isActive ? "var(--color-accent)" : "var(--color-border)",
           opacity: isActive ? 1 : 0.6,
         }}
       >
-        {/* Background image with parallax */}
-        <motion.div
-          className="absolute inset-0"
-          style={isActive ? { x: imgX, scale: imgScale } : undefined}
-        >
+        {/* Background image */}
+        <div className="absolute inset-0">
           <Image
             src={project.image}
             alt={project.title}
@@ -190,7 +172,7 @@ const FullScreenCard = memo(function FullScreenCard({
             sizes="100vw"
             className="object-cover"
           />
-        </motion.div>
+        </div>
 
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)]/90 via-[var(--color-bg)]/50 to-transparent" />
@@ -211,7 +193,7 @@ const FullScreenCard = memo(function FullScreenCard({
             style={{ opacity: isActive ? 1 : 0.4, transform: `translateY(${isActive ? 0 : 10}px)` }}
           >
             {index === 0 && (
-              <span className="px-3 py-1 text-[10px] font-body tracking-widest uppercase bg-[var(--color-accent)]/10 text-[var(--color-accent)] rounded-full border border-[var(--color-accent)]/20 backdrop-blur-sm">
+              <span className="px-3 py-1 text-[10px] font-body tracking-widest uppercase bg-[var(--color-accent)]/10 text-[var(--color-accent)] rounded-full border border-[var(--color-accent)]/20">
                 Featured
               </span>
             )}
@@ -239,7 +221,7 @@ const FullScreenCard = memo(function FullScreenCard({
             {project.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 text-xs font-body bg-[var(--color-bg)]/70 text-[var(--color-text)] rounded-full border border-[var(--color-border)] backdrop-blur-sm"
+                className="px-3 py-1 text-xs font-body bg-[var(--color-bg)] text-[var(--color-text)] rounded-full border border-[var(--color-border)]"
               >
                 {tag}
               </span>
