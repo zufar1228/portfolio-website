@@ -7,7 +7,6 @@ import { experiences } from "@/lib/data";
 import Container from "../ui/Container";
 import SectionIntro from "../ui/SectionIntro";
 import SpotlightCard from "../ui/SpotlightCard";
-import TiltCard from "../ui/TiltCard";
 
 export default function Experience() {
   const sectionRef = useRef(null);
@@ -18,10 +17,9 @@ export default function Experience() {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="experience" className="py-32 relative overflow-hidden" ref={sectionRef}>
-      <div className="absolute inset-0 bg-[var(--color-bg-alt)]" />
+    <section id="experience" className="py-16 sm:py-32 relative overflow-hidden" ref={sectionRef}>
       <Container className="relative">
-        <SectionIntro label="Experience" title="Where I've worked" />
+        <SectionIntro number="03" label="Experience" title="Where I've worked" />
 
         <div className="relative">
           {/* Timeline line */}
@@ -89,9 +87,8 @@ function TimelineItem({
           isEven ? "" : "md:text-left"
         }`}
       >
-        <TiltCard tiltMax={4} glare>
         <SpotlightCard className="rounded-2xl">
-          <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/50 backdrop-blur-sm hover:border-[var(--color-text-tertiary)]/30 transition-all duration-300 group">
+          <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/50 hover:border-[var(--color-text-tertiary)]/30 transition-all duration-300 group">
             <div className="flex items-center gap-3 mb-3">
               <motion.div
                 className="w-8 h-8 rounded-lg bg-[var(--color-bg-alt)] flex items-center justify-center group-hover:bg-[var(--color-accent)]/10 transition-colors"
@@ -112,9 +109,18 @@ function TimelineItem({
             <p className="font-body text-sm text-[var(--color-text-secondary)] leading-relaxed">
               {exp.description}
             </p>
+            {exp.metrics && (
+              <div className="flex gap-4 mt-4 pt-4 border-t border-[var(--color-border)]">
+                {exp.metrics.map((m) => (
+                  <div key={m.label} className="text-center">
+                    <span className="block font-headline text-lg font-bold text-[var(--color-text)]">{m.value}</span>
+                    <span className="text-[10px] font-body text-[var(--color-text-tertiary)] tracking-wide">{m.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </SpotlightCard>
-        </TiltCard>
       </motion.div>
 
       {/* Spacer for the other side */}

@@ -5,12 +5,23 @@ import { useState, useEffect } from "react";
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
+  const [skip, setSkip] = useState(false);
 
   useEffect(() => {
-    // Ensure minimum display time for the animation
-    const timer = setTimeout(() => setLoading(false), 2400);
+    // Skip preloader for returning visitors in the same session
+    if (sessionStorage.getItem("preloaded")) {
+      setSkip(true);
+      setLoading(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setLoading(false);
+      sessionStorage.setItem("preloaded", "1");
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
+
+  if (skip) return null;
 
   return (
     <AnimatePresence mode="wait">

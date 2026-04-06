@@ -21,17 +21,19 @@ export default function GridPattern({
 }: GridPatternProps) {
   const id = useId();
   const containerRef = useRef<SVGSVGElement>(null);
-  const [squares, setSquares] = useState<{ id: number; row: number; col: number; delay: number }[]>([]);
+  const [squares, setSquares] = useState<{ id: number; row: number; col: number; delay: number; speed: number }[]>([]);
 
   useEffect(() => {
     const cols = Math.ceil(window.innerWidth / width) + 1;
     const rows = Math.ceil(window.innerHeight / height) + 1;
+
     setSquares(
       Array.from({ length: numSquares }, (_, i) => ({
         id: i,
         col: Math.floor(Math.random() * cols),
         row: Math.floor(Math.random() * rows),
-        delay: Math.random() * duration,
+        delay: Math.random() * duration * 2,
+        speed: duration + Math.random() * duration * 2,
       }))
     );
   }, [numSquares, width, height, duration]);
@@ -74,7 +76,7 @@ export default function GridPattern({
           fill="var(--color-accent)"
           rx={2}
           style={{
-            animation: `grid-fade-${id.replace(/:/g, "")} ${duration * 2}s ease-in-out ${sq.delay}s infinite`,
+            animation: `grid-fade-${id.replace(/:/g, "")} ${sq.speed}s ease-in-out ${sq.delay}s infinite`,
 
           }}
         />

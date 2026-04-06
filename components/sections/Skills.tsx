@@ -136,20 +136,19 @@ export default function Skills() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="skills" className="py-32 relative overflow-hidden">
+    <section id="skills" className="py-16 sm:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-[var(--color-bg-alt)]" />
-      <GridPattern width={50} height={50} numSquares={14} maxOpacity={0.15} duration={5} />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[var(--color-accent)]/[0.03] blur-[150px] rounded-full" />
+      <GridPattern width={50} height={50} numSquares={16} maxOpacity={0.1} duration={4} />
 
       <Container className="relative">
-        <SectionIntro label="Skills" title="Technologies I work with" />
+        <SectionIntro number="01" label="Skills" title="Technologies I work with" />
 
         <div ref={ref}>
           <motion.div
             initial={{ scaleX: 0 }}
             animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
             transition={{ duration: 1.2, ease: [0.215, 0.61, 0.355, 1] as [number, number, number, number] }}
-            className="h-px w-full bg-gradient-to-r from-transparent via-[var(--color-accent)]/40 to-transparent mb-12"
+            className="h-px w-full bg-gradient-to-r from-transparent via-[var(--color-border)] to-transparent mb-12"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5 auto-rows-fr" style={{ perspective: 1200 }}>
             {skillCategories.map((cat, i) => (

@@ -1,5 +1,4 @@
 export const navItems = [
-  { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Experience", href: "#experience" },
@@ -11,19 +10,18 @@ export const heroContent = {
   name: "Muhammad Zufar Natsir",
   title: "Software & IoT Developer",
   description:
-    "Final-year Computer Engineering student at IPB University, building reliable backend systems and IoT solutions that turn real-world data into actionable insights.",
+    "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights — from warehouse monitoring to geolocation asset tracking.",
   primaryCta: { label: "View My Work", href: "#projects" },
-  secondaryCta: { label: "Get In Touch", href: "#contact" },
+  secondaryCta: { label: "Download Resume", href: "https://drive.google.com/file/d/1EiKF9yDO-15LhYgtCDrvP2GK1XEXdSOH/view?usp=sharing" },
 };
 
 export const aboutContent = {
   sectionLabel: "About",
   heading: "A bit about me",
-  bio: "I'm a final-year student in the Computer Engineering Technology program at the Vocational School of IPB University. I specialize in backend development and IoT systems, with hands-on experience building real-time monitoring dashboards, RESTful APIs for geolocation-based asset tracking, and scalable IoT data pipelines. I enjoy working in cross-functional teams and turning complex technical problems into clean, reliable solutions.",
+  bio: "I specialize in backend development and IoT systems, with hands-on experience building real-time monitoring dashboards, RESTful APIs for geolocation-based asset tracking, and scalable IoT data pipelines. Currently completing my Computer Engineering degree at IPB University, I enjoy working in cross-functional teams and turning complex technical problems into clean, reliable solutions.",
   stats: [
     { value: "2+", label: "Years of Experience" },
     { value: "5+", label: "Projects Completed" },
-    { value: "3.71", label: "GPA" },
   ],
 };
 
@@ -70,8 +68,11 @@ export const skillCategories: {
     icon: "Cloud",
     title: "Cloud & Tools",
     skills: [
-      { name: "AWS Cloud", logo: "https://cdn.simpleicons.org/amazonaws" },
+      { name: "AWS Cloud", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
+      { name: "Docker", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
       { name: "Git", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
+      { name: "Linux", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg" },
+      { name: "Postman", logo: "https://cdn.simpleicons.org/postman" },
     ],
   },
 ];
@@ -90,7 +91,8 @@ export const projects = [
     tags: ["Next.js", "Express.js", "PostgreSQL", "MQTT"],
     image: "/dashboard-warehouse.png",
     liveUrl: "#",
-    sourceUrl: "#",
+    sourceUrl: "https://github.com/zufar1228/synergy-frontend",
+    backendUrl: "https://github.com/zufar1228/synergy-backend",
   },
   {
     title: "Geolocation Asset Tracking System",
@@ -104,8 +106,6 @@ export const projects = [
     ],
     tags: ["Express.js", "PostgreSQL", "GIS/GPS", "RESTful API"],
     image: "/dashboard-geo.png",
-    liveUrl: "#",
-    sourceUrl: "#",
   },
   {
     title: "River Monitoring & Early Warning System",
@@ -120,7 +120,8 @@ export const projects = [
     tags: ["Next.js", "Express.js", "PostgreSQL", "IoT"],
     image: "/dashboard-river.png",
     liveUrl: "#",
-    sourceUrl: "#",
+    sourceUrl: "https://github.com/zufar1228/sicita-frontend",
+    backendUrl: "https://github.com/zufar1228/sicita-backend",
   },
   {
     title: "Laundry Management App",
@@ -134,8 +135,7 @@ export const projects = [
     ],
     tags: ["CodeIgniter 3", "MySQL", "PHP", "Bootstrap"],
     image: "/dashboard-laundry.png",
-    liveUrl: "#",
-    sourceUrl: "#",
+    sourceUrl: "https://github.com/zufarnatsir/SmartWash",
   },
 ];
 
@@ -145,21 +145,31 @@ export const experiences = [
     role: "Software & IoT Engineer Intern",
     company: "PT Len Industri (Persero)",
     description:
-      "Designed backend architecture (RESTful API) using Express.js and PostgreSQL to process asset management data across 6 company locations. Developed spatial data processing framework (GIS/GPS) for centralized asset tracking.",
+      "Designed backend architecture (RESTful API) using Express.js and PostgreSQL for centralized asset tracking with spatial data processing (GIS/GPS).",
+    metrics: [
+      { value: "6", label: "Locations" },
+      { value: "REST", label: "API Design" },
+      { value: "GIS", label: "Integration" },
+    ],
   },
   {
     period: "Aug 2025 — Dec 2025",
     role: "IoT Intern",
     company: "PT Synergy Dua Kawan Sejati",
     description:
-      "Built backend infrastructure with dynamic database schema for scalable IoT device management. Managed MQTT data flow from 4 IoT nodes and 8 sensor points with zero downtime. Led 80%+ of frontend dashboard development using Next.js.",
+      "Built scalable IoT backend infrastructure with dynamic database schema. Managed real-time MQTT data flow and led frontend dashboard development using Next.js.",
+    metrics: [
+      { value: "4", label: "IoT Nodes" },
+      { value: "8", label: "Sensors" },
+      { value: "0", label: "Downtime" },
+    ],
   },
   {
     period: "Aug 2022 — Jun 2026 (Expected)",
     role: "Bachelor of Applied Computer Engineering Technology (D4)",
     company: "IPB University — Vocational School",
     description:
-      "GPA: 3.71/4.00. Active in embedded system, web application, and sensor-based automation projects. Contributed to Soltarine UV energy charging device development.",
+      "Focused on embedded systems, web application development, and sensor-based automation. Built practical skills in real-time data processing, IoT protocols, and full-stack engineering.",
   },
 ];
 
@@ -168,7 +178,7 @@ export const contactInfo = {
   phone: "+62 812 1174 3607",
   location: "Jakarta, Indonesia",
   linkedin: "https://www.linkedin.com/in/muhammad-zufar-natsir-0b1353341",
-  github: "#",
+  github: "https://github.com/zufar1228",
 };
 
 export const footerContent = {

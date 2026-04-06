@@ -20,7 +20,7 @@ export default function About() {
   const lineHeight = useTransform(scrollYProgress, [0, 0.5], ["0%", "100%"]);
 
   return (
-    <section id="about" className="py-32 relative overflow-hidden" ref={sectionRef}>
+    <section id="about" className="py-16 sm:py-32 relative overflow-hidden" ref={sectionRef}>
       {/* Subtle floating particles */}
       <FloatingDots count={8} />
 
@@ -33,8 +33,8 @@ export default function About() {
       </div>
 
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          <div className="lg:col-span-5 relative group">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-16 items-start">
+          <div className="lg:col-span-5 relative group max-w-sm mx-auto lg:max-w-none">
             {/* Parallax disabled on mobile for perf; only applies md+ */}
             <div className="block md:hidden">
               <AboutImage />
@@ -56,7 +56,7 @@ export default function About() {
             <TextReveal
               text={aboutContent.heading}
               as="h2"
-              className="font-headline text-4xl md:text-5xl font-bold mb-8"
+              className="font-headline text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8"
             />
 
             <Reveal delay={0.2}>
@@ -64,11 +64,11 @@ export default function About() {
             </Reveal>
 
             <Reveal delay={0.3}>
-              <div className="grid grid-cols-3 gap-8 p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/50 backdrop-blur-sm mt-12 relative group hover:border-[var(--color-accent)]/20 transition-all duration-500">
+              <div className="grid grid-cols-2 gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/50 backdrop-blur-sm mt-8 sm:mt-12 relative group hover:border-[var(--color-accent)]/20 transition-all duration-500">
                 {/* Animated glow on hover */}
                 <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-[var(--color-accent)]/0 via-[var(--color-accent)]/10 to-[var(--color-accent)]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm" />
                 {aboutContent.stats.map((stat, i) => (
-                  <div key={stat.label} className={`${i > 0 ? "border-l border-[var(--color-border)] pl-8" : ""}`}>
+                  <div key={stat.label} className={`${i > 0 ? "border-l border-[var(--color-border)] pl-4 sm:pl-8" : ""}`}>
                     <AnimatedCounter target={stat.value} label={stat.label} />
                   </div>
                 ))}
@@ -123,7 +123,7 @@ function ScrollWord({
 
 function AboutImage() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
     <motion.div
@@ -133,13 +133,14 @@ function AboutImage() {
       animate={isInView ? { clipPath: "inset(0% 0% 0% 0%)" } : {}}
       transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
     >
-      <div className="aspect-[4/5] bg-[var(--color-surface)] rounded-2xl overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
+      <div className="aspect-[4/5] bg-[var(--color-surface)] rounded-2xl overflow-hidden grayscale-0 md:grayscale md:group-hover:grayscale-0 transition-all duration-700">
         <Image
           src="/images/profile-picture.png"
           alt="Muhammad Zufar Natsir"
           width={600}
           height={750}
           sizes="(max-width: 768px) 100vw, 33vw"
+          priority
           className="w-full h-full object-cover"
         />
       </div>

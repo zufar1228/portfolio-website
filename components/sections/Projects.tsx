@@ -80,12 +80,15 @@ export default function Projects() {
     >
       <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
         {/* Top bar */}
-        <div className="px-6 md:px-12 lg:px-16 pt-8 pb-4 flex items-end justify-between">
+          <div className="px-4 sm:px-6 md:px-12 lg:px-16 pt-6 sm:pt-8 pb-3 sm:pb-4 flex items-end justify-between">
           <div>
-            <span className="font-body text-xs tracking-widest text-[var(--color-text-secondary)] block mb-1">
-              Projects
-            </span>
-            <h2 className="font-headline text-3xl md:text-4xl font-bold">
+            <div className="flex items-center gap-3 mb-1">
+              <span className="font-headline text-sm text-[var(--color-accent)] font-medium">02</span>
+              <span className="font-body text-xs tracking-widest text-[var(--color-text-secondary)] block">
+                Projects
+              </span>
+            </div>
+            <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl font-bold">
               Selected works
             </h2>
           </div>
@@ -120,7 +123,7 @@ export default function Projects() {
           </div>
         </div>
         {/* Progress bar */}
-        <div className="mx-6 md:mx-12 lg:mx-16 h-px bg-[var(--color-border)]">
+          <div className="mx-4 sm:mx-6 md:mx-12 lg:mx-16 h-px bg-[var(--color-border)]">
           <motion.div
             className="h-full bg-[var(--color-accent)]"
             style={{ width: progressWidth }}
@@ -172,7 +175,7 @@ function FullScreenCard({
   const imgScale = useTransform(scrollYProgress, [segStart, segEnd], [1.08, 1]);
 
   return (
-    <div className="w-screen shrink-0 flex items-stretch px-3 md:px-6 pb-6">
+    <div className="w-screen shrink-0 flex items-stretch px-2 sm:px-3 md:px-6 pb-4 sm:pb-6">
       <motion.div
         className="relative flex-1 rounded-2xl overflow-hidden border bg-[var(--color-surface)]/30 group"
         animate={{
@@ -209,7 +212,7 @@ function FullScreenCard({
         />
 
         {/* Content overlay */}
-        <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-10 lg:p-14 max-w-2xl">
+        <div className="relative z-10 h-full flex flex-col justify-end p-4 sm:p-6 md:p-10 lg:p-14 max-w-2xl">
 
           {/* Featured badge */}
           <motion.div
@@ -228,7 +231,7 @@ function FullScreenCard({
           </motion.div>
 
           <motion.h3
-            className="relative font-headline text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-3"
+            className="relative font-headline text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-2 sm:mb-3"
             animate={{
               opacity: isActive ? 1 : 0.4,
               y: isActive ? 0 : 12,
@@ -239,7 +242,7 @@ function FullScreenCard({
           </motion.h3>
 
           <motion.p
-            className="relative font-body text-[var(--color-text)] text-sm md:text-base leading-relaxed mb-5 line-clamp-3 md:line-clamp-none opacity-80"
+            className="relative font-body text-[var(--color-text)] text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-5 line-clamp-2 sm:line-clamp-3 md:line-clamp-none opacity-80"
             animate={{
               opacity: isActive ? 0.8 : 0.3,
               y: isActive ? 0 : 14,
@@ -277,30 +280,54 @@ function FullScreenCard({
             }}
             transition={{ duration: 0.5, delay: 0.25 }}
           >
-            <MagneticWrap strength={0.2}>
-              <a
-                href={project.liveUrl}
-                className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
-              >
-                Live Demo
-                <ArrowUpRight
-                  size={14}
-                  className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
-                />
-              </a>
-            </MagneticWrap>
-            <MagneticWrap strength={0.2}>
-              <a
-                href={project.sourceUrl}
-                className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
-              >
-                Source Code
-                <ArrowUpRight
-                  size={14}
-                  className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
-                />
-              </a>
-            </MagneticWrap>
+            {project.liveUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+                >
+                  Live Demo
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
+            {project.sourceUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+                >
+                  {project.backendUrl ? "Frontend" : "Source Code"}
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
+            {project.backendUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.backendUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+                >
+                  Backend
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
           </motion.div>
         </div>
 

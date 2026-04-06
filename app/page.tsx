@@ -4,17 +4,18 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Footer from "@/components/layout/Footer";
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
-const About = dynamic(() => import("@/components/sections/About"));
+import Services from "@/components/sections/Services";
 const Skills = dynamic(() => import("@/components/sections/Skills"));
 const Projects = dynamic(() => import("@/components/sections/Projects"));
 const Experience = dynamic(() => import("@/components/sections/Experience"));
 const Contact = dynamic(() => import("@/components/sections/Contact"));
-import CursorGlow from "@/components/ui/CursorGlow";
 import CustomCursor from "@/components/ui/CustomCursor";
 import Preloader from "@/components/ui/Preloader";
 import SocialSidebar from "@/components/ui/SocialSidebar";
 import EasterEgg from "@/components/ui/EasterEgg";
 import SectionDivider from "@/components/ui/SectionDivider";
+import SectionTransition from "@/components/ui/SectionTransition";
+import AiChat from "@/components/sections/AiChat";
 
 export default function Home() {
   return (
@@ -22,30 +23,30 @@ export default function Home() {
       <Preloader />
       <SmoothScroll />
       <ScrollProgress />
-      <CursorGlow />
       <CustomCursor />
       <EasterEgg />
       <SocialSidebar />
+      <AiChat />
       <div className="grain" />
-      {/* Vignette overlay for depth */}
-      <div
-        className="pointer-events-none fixed inset-0 z-40"
-        style={{
-          background: "radial-gradient(ellipse at center, transparent 50%, var(--color-bg) 100%)",
-          opacity: 0.4,
-        }}
-      />
       <Navbar />
-      <main className="relative">
+      <main id="main-content" className="relative">
         <Hero />
+        <SectionTransition>
+          <Services />
+        </SectionTransition>
         <SectionDivider variant="diamond" />
-        <About />
-        <Skills />
+        <SectionTransition>
+          <Skills />
+        </SectionTransition>
         <SectionDivider variant="dots" />
         <Projects />
-        <Experience />
+        <SectionTransition>
+          <Experience />
+        </SectionTransition>
         <SectionDivider variant="line" />
-        <Contact />
+        <SectionTransition>
+          <Contact />
+        </SectionTransition>
       </main>
       <Footer />
     </>

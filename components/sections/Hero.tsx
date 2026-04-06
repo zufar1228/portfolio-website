@@ -1,14 +1,13 @@
 "use client";
 
-import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from "framer-motion";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ChevronDown, ArrowRight, Download } from "lucide-react";
+import Image from "next/image";
 import { heroContent } from "@/lib/data";
 import MagneticWrap from "../ui/MagneticWrap";
-import Typewriter from "../ui/Typewriter";
 import GridPattern from "../ui/GridPattern";
-import FloatingDots from "../ui/FloatingDots";
-import ParticleField from "../ui/ParticleField";
-import { useEffect, useRef, useState } from "react";
+import Typewriter from "../ui/Typewriter";
+import { useRef } from "react";
 
 /* ---- letter-by-letter stagger — the signature animation ---- */
 function StaggerChars({
@@ -20,54 +19,36 @@ function StaggerChars({
   className?: string;
   delay?: number;
 }) {
+  let charIndex = 0;
+  const words = text.split(" ");
+
   return (
     <span className={className} aria-label={text}>
-      {text.split("").map((ch, i) => (
-        <motion.span
-          key={`${ch}-${i}`}
-          className="inline-block"
-          style={{ whiteSpace: ch === " " ? "pre" : undefined }}
-          initial={{ y: 80, opacity: 0, rotateX: -90 }}
-          animate={{ y: 0, opacity: 1, rotateX: 0 }}
-          transition={{
-            duration: 0.6,
-            delay: delay + i * 0.025,
-            ease: [0.215, 0.61, 0.355, 1],
-          }}
-        >
-          {ch === " " ? "\u00A0" : ch}
-        </motion.span>
-      ))}
+      {words.map((word, wi) => {
+        const startIndex = charIndex;
+        charIndex += word.length + 1; // +1 for the space
+        return (
+          <span key={wi} style={{ whiteSpace: "nowrap", display: "inline-block" }}>
+            {word.split("").map((ch, ci) => (
+              <motion.span
+                key={`${ch}-${startIndex + ci}`}
+                className="inline-block"
+                initial={{ y: 80, opacity: 0, rotateX: -90 }}
+                animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: delay + (startIndex + ci) * 0.025,
+                  ease: [0.215, 0.61, 0.355, 1],
+                }}
+              >
+                {ch}
+              </motion.span>
+            ))}
+            {wi < words.length - 1 && "\u00A0"}
+          </span>
+        );
+      })}
     </span>
-  );
-}
-
-/* ---- animated counter for the floating stat badges ---- */
-function HeroStat({ value, label, delay }: { value: string; label: string; delay: number }) {
-  const numericPart = parseFloat(value);
-  const suffix = value.replace(/[\d.]/g, "");
-  const displayed = useMotionValue(0);
-  const springVal = useSpring(displayed, { stiffness: 60, damping: 20 });
-  const [text, setText] = useState("0");
-
-  useEffect(() => {
-    const timeout = setTimeout(() => animate(displayed, numericPart, { duration: 2 }), delay * 1000);
-    const unsub = springVal.on("change", (v) =>
-      setText(numericPart % 1 !== 0 ? v.toFixed(2) : Math.round(v).toString())
-    );
-    return () => { clearTimeout(timeout); unsub(); };
-  }, [displayed, springVal, numericPart, delay]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay, duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
-      className="px-5 py-3 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/60 backdrop-blur-md flex items-center gap-2"
-    >
-      <span className="font-headline font-bold text-lg">{text}{suffix}</span>
-      <span className="text-xs font-body text-[var(--color-text-secondary)]">{label}</span>
-    </motion.div>
   );
 }
 
@@ -81,147 +62,142 @@ export default function Hero() {
     <motion.section
       ref={containerRef}
       style={{ opacity, scale }}
-      className="min-h-screen flex flex-col justify-center items-center px-6 sm:px-8 text-center relative overflow-hidden"
+      className="min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 relative overflow-hidden pt-24 sm:pt-20 pb-16"
     >
       {/* ---- Animated grid pattern background ---- */}
-      <GridPattern width={60} height={60} numSquares={18} maxOpacity={0.2} duration={4} />
+      <GridPattern width={60} height={60} numSquares={30} maxOpacity={0.15} duration={3} />
 
-      {/* ---- Interactive particle network ---- */}
-      <ParticleField className="hidden md:block" />
-
-      {/* ---- Floating particles ---- */}
-      <FloatingDots count={12} />
-
-      {/* ---- Aurora gradient mesh background (CSS-only) ---- */}
+      {/* ---- Single subtle aurora blob ---- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div
           className="absolute -top-1/2 -left-1/4 w-[70vw] h-[70vw] rounded-full animate-aurora-1"
-          style={{ background: "radial-gradient(circle, var(--color-accent)/0.06 0%, transparent 70%)", willChange: "transform" }}
-        />
-        <div
-          className="absolute -bottom-1/3 -right-1/4 w-[55vw] h-[55vw] rounded-full animate-aurora-2"
-          style={{ background: "radial-gradient(circle, var(--color-accent)/0.04 0%, transparent 70%)", willChange: "transform" }}
+          style={{ background: "radial-gradient(circle, var(--color-accent)/0.04 0%, transparent 70%)" }}
         />
       </div>
 
-      {/* ---- Animated rings (CSS-only) ---- */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10">
-        {[600, 450].map((size, i) => (
-          <div
-            key={size}
-            className="absolute rounded-full border border-[var(--color-border)] opacity-[0.08]"
-            style={{
-              width: size,
-              height: size,
-              top: -size / 2,
-              left: -size / 2,
-              animation: `spin ${80 + i * 30}s linear infinite ${i % 2 === 0 ? '' : 'reverse'}`,
-              willChange: "transform",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="space-y-8 max-w-5xl z-10">
-        {/* Status badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="flex justify-center"
-        >
-          <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/50 backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]" />
-            </span>
-            <span className="text-xs font-body text-[var(--color-text-secondary)] tracking-wide">
-              Available for opportunities
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Greeting */}
-        <motion.p
-          initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-body text-[var(--color-text-secondary)] tracking-[0.25em] uppercase text-xs"
-        >
-          {heroContent.greeting}
-        </motion.p>
-
-        {/* Name — typewriter animation */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.5 }}
-        >
-          <h1 className="font-headline font-bold text-5xl md:text-7xl lg:text-[5.5rem] tracking-tight leading-[1.05]">
-            <Typewriter words={[heroContent.name, "Call me Zufar"]} className="" />
-          </h1>
-        </motion.div>
-
-        {/* Title — text scramble effect */}
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="font-body text-xl md:text-2xl text-[var(--color-text-secondary)] font-light shimmer-text"
-        >
-          {heroContent.title}
-        </motion.p>
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.4 }}
-          className="font-body text-[var(--color-text-secondary)] max-w-[600px] mx-auto text-sm md:text-base leading-relaxed"
-        >
-          {heroContent.description}
-        </motion.p>
-
-        {/* CTA Buttons with magnetic effect */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.6 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
-        >
-          <MagneticWrap strength={0.15}>
-            <a
-              href={heroContent.primaryCta.href}
-              className="group relative px-8 py-4 bg-[var(--color-accent)] text-[var(--color-bg)] rounded-xl font-body font-semibold overflow-hidden inline-flex items-center justify-center gap-2 transition-transform active:scale-[0.97]"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                {heroContent.primaryCta.label}
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+      {/* Main content — two-column on desktop */}
+      <div className="z-10 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        {/* Left: text */}
+        <div className="space-y-5 sm:space-y-6 text-center lg:text-left order-2 lg:order-1">
+          {/* Status badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex justify-center lg:justify-start"
+          >
+            <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/50">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]" />
               </span>
-              {/* Shine effect on hover */}
-              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            </a>
-          </MagneticWrap>
-          <MagneticWrap strength={0.15}>
-            <a
-              href={heroContent.secondaryCta.href}
-              className="group px-8 py-4 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl font-body font-semibold transition-all hover:bg-[var(--color-surface)] hover:border-[var(--color-text-tertiary)] active:scale-[0.97] inline-flex items-center justify-center"
-            >
-              {heroContent.secondaryCta.label}
-            </a>
-          </MagneticWrap>
-        </motion.div>
+              <span className="text-xs font-body text-[var(--color-text-secondary)] tracking-wide">
+                Available for opportunities
+              </span>
+            </div>
+          </motion.div>
 
-        {/* Floating stat badges */}
+          {/* Greeting */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="font-body text-[var(--color-text-secondary)] tracking-[0.25em] uppercase text-xs"
+          >
+            {heroContent.greeting}
+          </motion.p>
+
+          {/* Name — one-time stagger reveal */}
+          <div>
+            <h1 className="font-headline font-bold text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem] tracking-tight leading-[1.05]">
+              <StaggerChars text={heroContent.name} delay={0.3} />
+            </h1>
+          </div>
+
+          {/* Title — typewriter cycle */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="font-body text-base sm:text-xl md:text-2xl text-[var(--color-text-secondary)] font-light min-h-[1.5em]"
+          >
+            <Typewriter
+              words={["Software Developer", "IoT Engineer", "Backend Developer"]}
+            />
+          </motion.div>
+
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="font-body text-[var(--color-text-secondary)] max-w-[600px] mx-auto lg:mx-0 text-base md:text-lg leading-relaxed"
+          >
+            {heroContent.description}
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.0 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2 px-2 sm:px-0"
+          >
+            <MagneticWrap strength={0.15}>
+              <a
+                href={heroContent.primaryCta.href}
+                className="group relative px-8 py-4 bg-[var(--color-accent)] text-[var(--color-bg)] rounded-xl font-body font-semibold overflow-hidden inline-flex items-center justify-center gap-2 transition-transform active:scale-[0.97]"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  {heroContent.primaryCta.label}
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </span>
+                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </a>
+            </MagneticWrap>
+            <MagneticWrap strength={0.15}>
+              <a
+                href={heroContent.secondaryCta.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group px-8 py-4 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl font-body font-semibold transition-all hover:bg-[var(--color-surface)] hover:border-[var(--color-text-tertiary)] active:scale-[0.97] inline-flex items-center justify-center gap-2"
+              >
+                <Download size={16} />
+                {heroContent.secondaryCta.label}
+              </a>
+            </MagneticWrap>
+          </motion.div>
+        </div>
+
+        {/* Right: profile photo */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.8 }}
-          className="flex flex-wrap justify-center gap-3 pt-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.33, 1, 0.68, 1] }}
+          className="relative order-1 lg:order-2 flex justify-center"
         >
-          <HeroStat value="2+" label="Years Exp" delay={2.1} />
-          <HeroStat value="5+" label="Projects" delay={2.3} />
-          <HeroStat value="3.71" label="GPA" delay={2.5} />
+          <div className="relative w-56 h-64 sm:w-72 sm:h-80 lg:w-[340px] lg:h-[400px]">
+            {/* Decorative corner accents */}
+            <div className="absolute -top-3 -left-3 w-12 h-12 border-t-2 border-l-2 border-[var(--color-accent)]/40 rounded-tl-3xl" />
+            <div className="absolute -bottom-3 -right-3 w-12 h-12 border-b-2 border-r-2 border-[var(--color-accent)]/40 rounded-br-3xl" />
+            <div className="absolute -top-3 -right-3 w-6 h-6 border-t border-r border-[var(--color-border)]/30 rounded-tr-xl" />
+            <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b border-l border-[var(--color-border)]/30 rounded-bl-xl" />
+            {/* Glow */}
+            <div className="absolute -inset-8 rounded-3xl bg-[var(--color-accent)]/[0.04] blur-3xl" />
+            {/* Accent gradient bar */}
+            <div className="absolute -left-1.5 top-[15%] bottom-[15%] w-[3px] rounded-full bg-gradient-to-b from-transparent via-[var(--color-accent)]/50 to-transparent" />
+            {/* Photo */}
+            <div className="relative w-full h-full rounded-3xl overflow-hidden border border-[var(--color-border)]/50">
+              <Image
+                src="/images/profile-picture.png"
+                alt="Muhammad Zufar Natsir"
+                fill
+                sizes="(max-width: 640px) 224px, (max-width: 1024px) 288px, 340px"
+                priority
+                className="object-cover"
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
 
@@ -229,7 +205,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}
-        transition={{ delay: 2.5, duration: 0.8 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2"
       >
         <motion.div
