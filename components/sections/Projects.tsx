@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useEffect, useMemo, memo } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/data";
@@ -67,7 +67,8 @@ export default function Projects() {
     return { inputRange: inp, outputRange: out };
   }, [scrollRange, count]);
 
-  const x = useTransform(scrollYProgress, inputRange, outputRange);
+  const rawX = useTransform(scrollYProgress, inputRange, outputRange);
+  const x = useSpring(rawX, { stiffness: 400, damping: 40, mass: 0.5 });
   const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
