@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useEffect, useMemo, memo, useCallback } from "react";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/data";
 import MagneticWrap from "../ui/MagneticWrap";
 
@@ -161,11 +161,16 @@ export default function Projects() {
 
         {/* Keep scrolling hint */}
         <div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 transition-opacity duration-500"
-          style={{ opacity: showScrollHint ? 1 : 0, pointerEvents: "none" }}
+          className="absolute top-20 sm:top-22 left-1/2 -translate-x-1/2 transition-all duration-500"
+          style={{ opacity: showScrollHint ? 1 : 0, transform: `translateX(-50%) translateY(${showScrollHint ? 0 : -10}px)`, pointerEvents: "none" }}
         >
-          <span className="text-xs font-body text-[var(--color-text-tertiary)] tracking-wide">Keep scrolling!</span>
-          <ChevronDown size={16} className="text-[var(--color-text-tertiary)] animate-bounce" />
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--color-accent)]/20 bg-[var(--color-surface)]/80">
+            <span className="text-sm">🐹</span>
+            <span className="text-xs font-body text-[var(--color-text-secondary)]">
+              Psst… keep scrolling, there&apos;s more!
+            </span>
+            <span className="text-xs animate-bounce">↓</span>
+          </div>
         </div>
       </div>
     </section>
@@ -259,9 +264,25 @@ const FullScreenCard = memo(function FullScreenCard({
 
           {/* Links */}
           <div
-            className="relative flex gap-6 transition-all duration-500"
+            className="relative flex flex-wrap gap-4 sm:gap-6 transition-all duration-500"
             style={{ opacity: isActive ? 1 : 0.3, transform: `translateY(${isActive ? 0 : 18}px)` }}
           >
+            {project.demoUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-accent)] hover:text-[var(--color-text)] transition-colors"
+                >
+                  Live Demo
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
             {project.sourceUrl && (
               <MagneticWrap strength={0.2}>
                 <a
