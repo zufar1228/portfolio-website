@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { navItems } from "@/lib/data";
 import { X } from "lucide-react";
+import { useEffect } from "react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -10,6 +11,15 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -22,7 +32,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         >
           <button
             onClick={onClose}
-            className="absolute top-8 right-8 text-[var(--color-text)]"
+            className="absolute top-8 right-8 p-2 text-[var(--color-text)]"
             aria-label="Close menu"
           >
             <X size={32} />

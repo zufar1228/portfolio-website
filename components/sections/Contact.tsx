@@ -38,7 +38,7 @@ export default function Contact() {
       <GridPattern width={70} height={70} numSquares={6} maxOpacity={0.06} duration={5} />
 
       <Container className="relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Left side */}
           <div className="lg:col-span-5 space-y-10">
             <Reveal>

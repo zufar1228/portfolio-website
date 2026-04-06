@@ -48,9 +48,6 @@ export default function Services() {
     <section id="services" className="relative py-32 overflow-hidden">
       <Container>
         <div className="flex items-center gap-4 mb-16">
-          <span className="font-headline text-sm text-[var(--color-accent)] font-medium">
-            00
-          </span>
           <span className="font-body text-xs tracking-widest text-[var(--color-text-secondary)]">
             WHAT I DO
           </span>

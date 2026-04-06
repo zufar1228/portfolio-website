@@ -42,7 +42,7 @@ export default function GridPattern({
     <svg
       ref={containerRef}
       aria-hidden
-      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
+      className={`pointer-events-none absolute inset-0 h-full w-full overflow-hidden ${className}`}
       style={{
         maskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 50%, transparent 100%)",
         WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 50%, transparent 100%)",
@@ -76,8 +76,13 @@ export default function GridPattern({
           fill="var(--color-accent)"
           rx={2}
           style={{
-            animation: `grid-fade-${id.replace(/:/g, "")} ${sq.speed}s ease-in-out ${sq.delay}s infinite`,
-
+            opacity: 0,
+            animationName: `grid-fade-${id.replace(/:/g, "")}`,
+            animationDuration: `${sq.speed}s`,
+            animationTimingFunction: "ease-in-out",
+            animationDelay: `${sq.delay}s`,
+            animationIterationCount: "infinite",
+            animationFillMode: "backwards",
           }}
         />
       ))}

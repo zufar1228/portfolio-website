@@ -20,7 +20,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center space-x-8">
             <p className="font-body text-xs tracking-wide text-[var(--color-text-secondary)]">
-              {footerContent.year}
+              © {new Date().getFullYear()}
             </p>
             <motion.button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

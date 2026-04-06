@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu } from "lucide-react";
 import { navItems } from "@/lib/data";
@@ -11,7 +11,7 @@ import MagneticWrap from "../ui/MagneticWrap";
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [lastScroll, setLastScroll] = useState(0);
+  const lastScrollRef = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
@@ -19,12 +19,12 @@ export default function Navbar() {
     const onScroll = () => {
       const current = window.scrollY;
       setScrolled(current > 50);
-      setHidden(current > lastScroll && current > 100);
-      setLastScroll(current);
+      setHidden(current > lastScrollRef.current && current > 100);
+      lastScrollRef.current = current;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [lastScroll]);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -57,7 +57,7 @@ export default function Navbar() {
       >
         <MagneticWrap strength={0.2}>
           <a href="#" className="text-2xl font-bold tracking-tighter font-headline text-[var(--color-text)] relative group">
-            <span className="relative z-10">MZN</span>
+            <span className="relative z-10">MZN<span className="text-[var(--color-accent)]">.</span></span>
             <motion.span
               className="absolute -bottom-1 left-0 h-px bg-[var(--color-accent)]"
               initial={{ width: 0 }}

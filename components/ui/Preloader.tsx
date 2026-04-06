@@ -49,20 +49,8 @@ export default function Preloader() {
                 animate={{ y: "0%" }}
                 transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
               >
-                <span className="text-[var(--color-accent)]">Z</span>ufar Natsir
+                MZN<span className="text-[var(--color-accent)]">.</span>
               </motion.h1>
-            </div>
-
-            {/* Subtitle */}
-            <div className="overflow-hidden">
-              <motion.p
-                className="font-body text-xs tracking-[0.3em] uppercase text-[var(--color-text-secondary)]"
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: "0%", opacity: 1 }}
-                transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1], delay: 0.7 }}
-              >
-                Software &amp; IoT Developer
-              </motion.p>
             </div>
 
             {/* Progress bar */}

@@ -15,16 +15,6 @@ export const heroContent = {
   secondaryCta: { label: "Download Resume", href: "https://drive.google.com/file/d/1EiKF9yDO-15LhYgtCDrvP2GK1XEXdSOH/view?usp=sharing" },
 };
 
-export const aboutContent = {
-  sectionLabel: "About",
-  heading: "A bit about me",
-  bio: "I specialize in backend development and IoT systems, with hands-on experience building real-time monitoring dashboards, RESTful APIs for geolocation-based asset tracking, and scalable IoT data pipelines. Currently completing my Computer Engineering degree at IPB University, I enjoy working in cross-functional teams and turning complex technical problems into clean, reliable solutions.",
-  stats: [
-    { value: "2+", label: "Years of Experience" },
-    { value: "5+", label: "Projects Completed" },
-  ],
-};
-
 export type Skill = {
   name: string;
   logo?: string;
@@ -90,7 +80,6 @@ export const projects = [
     ],
     tags: ["Next.js", "Express.js", "PostgreSQL", "MQTT"],
     image: "/dashboard-warehouse.png",
-    liveUrl: "#",
     sourceUrl: "https://github.com/zufar1228/synergy-frontend",
     backendUrl: "https://github.com/zufar1228/synergy-backend",
   },
@@ -119,7 +108,6 @@ export const projects = [
     ],
     tags: ["Next.js", "Express.js", "PostgreSQL", "IoT"],
     image: "/dashboard-river.png",
-    liveUrl: "#",
     sourceUrl: "https://github.com/zufar1228/sicita-frontend",
     backendUrl: "https://github.com/zufar1228/sicita-backend",
   },
@@ -141,18 +129,6 @@ export const projects = [
 
 export const experiences = [
   {
-    period: "Feb 2025 — Jun 2025",
-    role: "Software & IoT Engineer Intern",
-    company: "PT Len Industri (Persero)",
-    description:
-      "Designed backend architecture (RESTful API) using Express.js and PostgreSQL for centralized asset tracking with spatial data processing (GIS/GPS).",
-    metrics: [
-      { value: "6", label: "Locations" },
-      { value: "REST", label: "API Design" },
-      { value: "GIS", label: "Integration" },
-    ],
-  },
-  {
     period: "Aug 2025 — Dec 2025",
     role: "IoT Intern",
     company: "PT Synergy Dua Kawan Sejati",
@@ -162,6 +138,18 @@ export const experiences = [
       { value: "4", label: "IoT Nodes" },
       { value: "8", label: "Sensors" },
       { value: "0", label: "Downtime" },
+    ],
+  },
+  {
+    period: "Feb 2025 — Jun 2025",
+    role: "Software & IoT Engineer Intern",
+    company: "PT Len Industri (Persero)",
+    description:
+      "Designed backend architecture (RESTful API) using Express.js and PostgreSQL for centralized asset tracking with spatial data processing (GIS/GPS).",
+    metrics: [
+      { value: "6", label: "Locations" },
+      { value: "REST", label: "API Design" },
+      { value: "GIS", label: "Integration" },
     ],
   },
   {

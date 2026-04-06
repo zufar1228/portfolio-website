@@ -256,22 +256,6 @@ const FullScreenCard = memo(function FullScreenCard({
             className="relative flex gap-6 transition-all duration-500"
             style={{ opacity: isActive ? 1 : 0.3, transform: `translateY(${isActive ? 0 : 18}px)` }}
           >
-            {project.liveUrl && (
-              <MagneticWrap strength={0.2}>
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
-                >
-                  Live Demo
-                  <ArrowUpRight
-                    size={14}
-                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
-                  />
-                </a>
-              </MagneticWrap>
-            )}
             {project.sourceUrl && (
               <MagneticWrap strength={0.2}>
                 <a

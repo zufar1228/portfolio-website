@@ -13,8 +13,11 @@
 
 /* Hide native cursor on desktop when custom cursor is active */
 @media (pointer: fine) and (min-width: 768px) {
-  * {
+  *:not(input):not(textarea):not(select) {
     cursor: none !important;
+  }
+  input, textarea, select {
+    cursor: auto !important;
   }
 }
 

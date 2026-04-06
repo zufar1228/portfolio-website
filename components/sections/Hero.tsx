@@ -149,7 +149,7 @@ export default function Hero() {
             <MagneticWrap strength={0.15}>
               <a
                 href={heroContent.primaryCta.href}
-                className="group relative px-8 py-4 bg-[var(--color-accent)] text-[var(--color-bg)] rounded-xl font-body font-semibold overflow-hidden inline-flex items-center justify-center gap-2 transition-transform active:scale-[0.97]"
+                className="group relative px-8 py-4 bg-[var(--color-accent)] text-[var(--color-bg)] rounded-xl font-body font-semibold overflow-hidden w-full sm:w-auto inline-flex items-center justify-center gap-2 transition-transform active:scale-[0.97]"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   {heroContent.primaryCta.label}
@@ -163,7 +163,7 @@ export default function Hero() {
                 href={heroContent.secondaryCta.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group px-8 py-4 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl font-body font-semibold transition-all hover:bg-[var(--color-surface)] hover:border-[var(--color-text-tertiary)] active:scale-[0.97] inline-flex items-center justify-center gap-2"
+                className="group px-8 py-4 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl font-body font-semibold transition-all hover:bg-[var(--color-surface)] hover:border-[var(--color-text-tertiary)] active:scale-[0.97] w-full sm:w-auto inline-flex items-center justify-center gap-2"
               >
                 <Download size={16} />
                 {heroContent.secondaryCta.label}
@@ -211,12 +211,18 @@ export default function Hero() {
         transition={{ delay: 1.2, duration: 0.6 }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2"
       >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        <button
+          onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
+          aria-label="Scroll to next section"
+          className="hover:opacity-80 transition-opacity"
         >
-          <ChevronDown size={28} />
-        </motion.div>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown size={28} />
+          </motion.div>
+        </button>
       </motion.div>
     </motion.section>
   );
