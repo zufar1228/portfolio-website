@@ -8,9 +8,9 @@ export const navItems = [
 export const heroContent = {
   greeting: "Hello, I'm",
   name: "Muhammad Zufar Natsir",
-  title: "Software & IoT Developer",
+  title: "Full-Stack & IoT Developer",
   description:
-    "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights — from warehouse monitoring to geolocation asset tracking.",
+    "I build scalable full-stack web applications and IoT solutions that turn real-world sensor data into actionable insights — from intelligent dashboards to monitoring systems.",
   primaryCta: { label: "View My Work", href: "#projects" },
   secondaryCta: { label: "Download Resume", href: "https://drive.google.com/file/d/1EiKF9yDO-15LhYgtCDrvP2GK1XEXdSOH/view?usp=sharing" },
 };
@@ -67,7 +67,21 @@ export const skillCategories: {
   },
 ];
 
-export const projects = [
+export type Project = {
+  title: string;
+  description: string;
+  highlights: string[];
+  tags: string[];
+  image: string;
+  imageDark?: string;
+  imageLight?: string;
+  demoUrl?: string;
+  sourceUrl?: string;
+  backendUrl?: string;
+};
+
+export const projects: Project[] = [
+
   {
     title: "Smart Warehouse IoT Dashboard",
     description:
@@ -79,28 +93,32 @@ export const projects = [
       "Cross-functional team of 4 members",
     ],
     tags: ["Next.js", "Express.js", "PostgreSQL", "MQTT"],
-    image: "/dashboard-warehouse.png",
+    image: "/dashboard-warehouse-dark.png",
+    imageDark: "/dashboard-warehouse-dark.png",
+    imageLight: "/dashboard-warehouse-light.png",
     demoUrl: "https://synergyiot.ninja",
     sourceUrl: "https://github.com/zufar1228/synergy-frontend",
     backendUrl: "https://github.com/zufar1228/synergy-backend",
   },
   {
-    title: "Geolocation Asset Tracking System",
+    title: "Industrial Asset Monitoring BFF",
     description:
-      "Designed backend architecture using Express.js and PostgreSQL to process asset management data distributed across 6 different company locations during the prototype phase. Developed a backend logic framework for spatial data processing (GIS/GPS), laying the foundation for a centralized asset tracking system responding to real-time coordinate point requests.",
+      "Collaborated in developing a Backend for Frontend (BFF) API service for a mobile industrial asset monitoring application, serving 5 state-owned defense companies (PT Len, PINDAD, DI, DAHANA, PAL). Contributed to bridging the mobile client with external Web APIs while managing local asset sessions and real-time GPS tracking.",
     highlights: [
-      "Backend architecture for 6 distributed company locations",
-      "Spatial data processing framework (GIS/GPS)",
-      "Real-time coordinate point request handling",
-      "Centralized asset tracking foundation",
+      "Multi-tenant BFF supporting 5 defense companies",
+      "Real-time GPS tracking with Socket.IO & geofence alerts",
+      "Asset usage timer with extension & monthly usage aggregation",
+      "Dockerized deployment with PM2 cluster mode & Swagger docs",
     ],
-    tags: ["Express.js", "PostgreSQL", "GIS/GPS", "RESTful API"],
-    image: "/dashboard-geo.png",
+    tags: ["Express.js", "PostgreSQL", "TypeORM", "Socket.IO", "Docker"],
+    image: "/dashboard-len-dark.png",
+    imageDark: "/dashboard-len-dark.png",
+    imageLight: "/dashboard-len-light.png",
   },
   {
     title: "River Monitoring & Early Warning System",
     description:
-      "Served as the sole full-stack developer in a cross-divisional collaboration with PT Toyo Sensing Indonesia. Built a real-time river condition monitoring system processing IoT sensor data streams at 5-minute intervals — tracking water quality, temperature, and water level. The system delivers automated warning notifications when readings exceed safe thresholds. Planned for future enhancement with ML-based sedimentation prediction.",
+      "Contributed as a full-stack developer in a cross-divisional collaboration with PT Toyo Sensing Indonesia. Developed a real-time river condition monitoring system processing IoT sensor data streams at 5-minute intervals — tracking water quality, temperature, and water level.",
     highlights: [
       "Real-time monitoring of water quality, temperature & water level",
       "Automated warning notifications for abnormal conditions",
@@ -108,7 +126,9 @@ export const projects = [
       "Future roadmap: ML-based sedimentation prediction",
     ],
     tags: ["Next.js", "Express.js", "PostgreSQL", "IoT"],
-    image: "/dashboard-river.png",
+    image: "/dashboard-river-dark.png",
+    imageDark: "/dashboard-river-dark.png",
+    imageLight: "/dashboard-river-light.png",
     demoUrl: "https://sicita-frontend.vercel.app",
     sourceUrl: "https://github.com/zufar1228/sicita-frontend",
     backendUrl: "https://github.com/zufar1228/sicita-backend",
@@ -116,7 +136,7 @@ export const projects = [
   {
     title: "Laundry Management App",
     description:
-      "Built an MVP laundry management web application to handle core business operations. Features include order registration, status tracking, and customer data management — designed as a practical solution for small laundry businesses.",
+      "Developed an MVP laundry management web application to handle core business operations. Features include order registration, status tracking, and customer data management — designed as a practical solution for small laundry businesses.",
     highlights: [
       "MVP-focused feature set for quick deployment",
       "Order registration and status tracking",
@@ -124,7 +144,7 @@ export const projects = [
       "Built with CodeIgniter 3 and MySQL",
     ],
     tags: ["CodeIgniter 3", "MySQL", "PHP", "Bootstrap"],
-    image: "/dashboard-laundry.png",
+    image: "/dashboard-laundry.jpg",
     sourceUrl: "https://github.com/zufarnatsir/SmartWash",
   },
 ];
@@ -147,11 +167,11 @@ export const experiences = [
     role: "Software & IoT Engineer Intern",
     company: "PT Len Industri (Persero)",
     description:
-      "Designed backend architecture (RESTful API) using Express.js and PostgreSQL for centralized asset tracking with spatial data processing (GIS/GPS).",
+      "Collaborated on a development team to build a BFF API (Express.js + TypeScript) for a mobile industrial asset monitoring app serving 5 defense companies. Handled implementation of real-time GPS trip tracking, geofence alerting, and multi-tenant authentication.",
     metrics: [
-      { value: "6", label: "Locations" },
-      { value: "REST", label: "API Design" },
-      { value: "GIS", label: "Integration" },
+      { value: "5", label: "Companies" },
+      { value: "Real-time", label: "GPS Tracking" },
+      { value: "BFF", label: "Architecture" },
     ],
   },
   {

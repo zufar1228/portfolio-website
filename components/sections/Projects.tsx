@@ -4,7 +4,8 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useEffect, useMemo, memo, useCallback } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { projects } from "@/lib/data";
+import { useTheme } from "next-themes";
+import { projects, Project } from "@/lib/data";
 import MagneticWrap from "../ui/MagneticWrap";
 
 export default function Projects() {
@@ -18,8 +19,17 @@ export default function Projects() {
   const [scrollRange, setScrollRange] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showScrollHint, setShowScrollHint] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const count = projects.length;
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Show "Keep scrolling!" after 2s idle, hide on scroll
   const resetIdleTimer = useCallback(() => {
@@ -31,6 +41,10 @@ export default function Projects() {
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     const idx = Math.min(count - 1, Math.floor(v * count));
     setActiveIndex((prev) => (prev !== idx ? idx : prev));
+    // Show dot while scrolling
+    setIsScrolling(true);
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    scrollTimerRef.current = setTimeout(() => setIsScrolling(false), 300);
     // Hide hint on scroll, restart idle timer — but not at very end
     if (v < 0.95) resetIdleTimer();
     else {
@@ -57,9 +71,12 @@ export default function Projects() {
     return () => window.removeEventListener("resize", debouncedMeasure);
   }, []);
 
-  // Cleanup idle timer
+  // Cleanup idle & scroll timers
   useEffect(() => {
-    return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    };
   }, []);
 
   // Build snap-point input/output arrays
@@ -135,11 +152,22 @@ export default function Projects() {
           </div>
         </div>
         {/* Progress bar */}
-          <div className="mx-4 sm:mx-6 md:mx-12 lg:mx-16 h-px bg-[var(--color-border)]">
+          <div className="mx-4 sm:mx-6 md:mx-12 lg:mx-16 h-px bg-[var(--color-border)] relative">
           <motion.div
-            className="h-full bg-[var(--color-accent)]"
+            className="h-full bg-[var(--color-accent)] relative"
             style={{ width: progressWidth }}
-          />
+          >
+            {/* Solid dot — visible only while scrolling */}
+            <div
+              className="absolute right-0 top-1/2 transition-[opacity,transform] duration-300 ease-out"
+              style={{
+                opacity: isScrolling ? 1 : 0,
+                transform: `translateX(50%) translateY(-50%) scale(${isScrolling ? 1 : 0.3})`,
+              }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
+            </div>
+          </motion.div>
         </div>
 
         {/* Full-screen horizontal scroll track */}
@@ -155,8 +183,11 @@ export default function Projects() {
               index={i}
               total={projects.length}
               isActive={activeIndex === i}
+              theme={theme}
+              mounted={mounted}
             />
           ))}
+
         </motion.div>
 
         {/* Keep scrolling hint */}
@@ -182,12 +213,30 @@ const FullScreenCard = memo(function FullScreenCard({
   index,
   total,
   isActive,
+  theme,
+  mounted,
 }: {
-  project: (typeof projects)[0];
+  project: Project;
   index: number;
   total: number;
   isActive: boolean;
+  theme?: string;
+  mounted: boolean;
 }) {
+  const imageSrc = useMemo(() => {
+    if (!mounted) return project.image;
+    
+    // Experiment: Always use light image for both themes if available
+    if (theme === "dark" && project.imageLight) {
+      return project.imageLight;
+    }
+    if (theme === "light" && project.imageLight) {
+      return project.imageLight;
+    }
+    
+    return project.image;
+  }, [mounted, theme, project]);
+
   return (
     <div className="w-screen shrink-0 flex items-stretch px-2 sm:px-3 md:px-6 pb-4 sm:pb-6">
       <div
@@ -200,16 +249,17 @@ const FullScreenCard = memo(function FullScreenCard({
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            src={project.image}
+            src={imageSrc}
             alt={project.title}
             fill
             sizes="100vw"
-            className="object-cover"
+            className="object-cover transition-opacity duration-700"
+            priority={index === 0}
           />
         </div>
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)]/90 via-[var(--color-bg)]/50 to-transparent" />
+        <div className="absolute inset-0 w-3/4 bg-gradient-to-r from-[var(--color-bg)]/95 via-[var(--color-bg)]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)]/70 via-transparent to-transparent" />
 
         {/* Active indicator — accent side bar */}
