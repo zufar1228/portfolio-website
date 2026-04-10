@@ -27,7 +27,7 @@ function generateResponse(input: string): string {
     return "He's built several production systems: a Smart Warehouse IoT Dashboard processing real-time data from 4 IoT nodes, a Geolocation Asset Tracking System for 6 company locations, a River Monitoring & Early Warning System with PT Toyo Sensing, and a Laundry Management App. Check out the Projects section for details!";
   }
   if (q.includes("contact") || q.includes("email") || q.includes("reach") || q.includes("hire")) {
-    return "You can reach Zufar at zufarnatsir@apps.ipb.ac.id or +62 812 1174 3607. He's based in Jakarta, Indonesia and currently available for opportunities. Scroll down to the Contact section to send a message directly!";
+    return "You can reach Zufar at zufarntsr@gmail.com or +62 812 1174 3607. He's based in Jakarta, Indonesia and currently available for opportunities. Scroll down to the Contact section to send a message directly!";
   }
   if (q.includes("experience") || q.includes("intern") || q.includes("job") || q.includes("career")) {
     return "Zufar has interned at PT Len Industri (Persero) as a Software & IoT Engineer, where he built backend APIs for asset tracking across 6 locations. He also interned at PT Synergy Dua Kawan Sejati, managing MQTT data pipelines from 4 IoT nodes with zero downtime. He's graduating from IPB University in 2026.";

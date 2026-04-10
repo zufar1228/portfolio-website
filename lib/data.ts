@@ -184,7 +184,7 @@ export const experiences = [
 ];
 
 export const contactInfo = {
-  email: "zufarnatsir@apps.ipb.ac.id",
+  email: "zufarntsr@gmail.com",
   phone: "+62 812 1174 3607",
   location: "Jakarta, Indonesia",
   linkedin: "https://www.linkedin.com/in/muhammad-zufar-natsir-0b1353341",
