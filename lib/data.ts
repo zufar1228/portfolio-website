@@ -96,7 +96,7 @@ export const projects: Project[] = [
     image: "/dashboard-warehouse-dark.png",
     imageDark: "/dashboard-warehouse-dark.png",
     imageLight: "/dashboard-warehouse-light.png",
-    demoUrl: "https://synergyiot.ninja",
+    demoUrl: "https://synergyiot.ninja/demo",
     sourceUrl: "https://github.com/zufar1228/synergy-frontend",
     backendUrl: "https://github.com/zufar1228/synergy-backend",
   },
