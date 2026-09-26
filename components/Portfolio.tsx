@@ -130,7 +130,10 @@ export default function Portfolio() {
     const hd = headerRef.current;
     let ro: ResizeObserver | undefined;
     if (hd && window.ResizeObserver) {
-      ro = new ResizeObserver(() => setHeaderH(hd.offsetHeight));
+      ro = new ResizeObserver(() => {
+        setHeaderH(hd.offsetHeight);
+        document.documentElement.style.setProperty("--header-h", hd.offsetHeight + "px");
+      });
       ro.observe(hd);
     }
 

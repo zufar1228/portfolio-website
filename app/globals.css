@@ -42,6 +42,7 @@
 
   --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
   --gutter: clamp(16px, 4vw, 48px);
+  --header-h: 62px;
 }
 
 :root[data-theme="dark"] {
@@ -237,6 +238,22 @@ textarea.input { min-height: 160px; resize: vertical; }
 .btn.cta.btn-secondary { min-width: 180px; color: var(--color-text); }
 
 .hero-fig { flex: 5 1 320px; min-width: 0; max-width: 600px; margin: 0; display: flex; flex-direction: column; }
+
+/* Two-column hero on laptop/desktop: scale the vertical rhythm with the
+   viewport height too, so the whole hero fits on short, wide screens
+   (e.g. 16:10 laptops at 200% scaling, ~1440×800 CSS px). */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .hero { padding-top: clamp(16px, min(4vw, 3svh), 48px); }
+  .hero-main { gap: clamp(24px, 4.5svh, 48px); }
+  .hero-first { margin-top: clamp(20px, min(5vw, 5svh), 64px); }
+  .hero-name { font-size: clamp(76px, min(12.5vw, 21svh), 196px); }
+  .hero-intro { gap: clamp(12px, 2.4svh, 20px); }
+  .hero-statement { font-size: clamp(18px, min(1.9vw, 3.2svh), 26px); }
+  .hero-fig {
+    max-width: min(600px, calc((100svh - var(--header-h) - 150px) * 896 / 1100));
+    margin-left: auto;
+  }
+}
 .portrait {
   position: relative; margin-top: 12px; overflow: hidden;
   background: var(--color-surface); cursor: crosshair;
