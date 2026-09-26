@@ -1,41 +1,42 @@
-import type { Metadata } from "next";
-import { Space_Grotesk, Plus_Jakarta_Sans, Geist } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Archivo } from "next/font/google";
 import Providers from "@/components/Providers";
+import { profile, contactInfo } from "@/lib/data";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans',display:'swap'});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-headline",
+const archivo = Archivo({
   subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-  display: "swap",
-});
+const title = `${profile.name} | Full-stack developer`;
+const description =
+  "Full-stack developer at Telkomsat. I build IoT backends and monitoring dashboards that turn sensor data into something people can act on.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://zufarnats.dev"),
-  title: "Muhammad Zufar Natsir | Software & IoT Developer",
-  description:
-    "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights — from warehouse monitoring to geolocation asset tracking.",
+  title,
+  description,
   openGraph: {
-    title: "Muhammad Zufar Natsir | Software & IoT Developer",
-    description:
-      "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
+    title,
+    description,
     type: "website",
-    siteName: "Zufar Natsir Portfolio",
+    siteName: profile.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Zufar Natsir | Software & IoT Developer",
-    description:
-      "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
+    title,
+    description,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#e6ecec" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c2228" },
+  ],
 };
 
 export default function RootLayout({
@@ -44,12 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn(spaceGrotesk.variable, plusJakarta.variable, "font-sans", geist.variable)}
-      suppressHydrationWarning
-    >
-      <body className="relative min-h-screen overflow-x-hidden">
+    <html lang="en" className={archivo.variable} suppressHydrationWarning>
+      <body className="min-h-screen bg-bg text-ink">
         <script
           type="application/ld+json"
           suppressHydrationWarning
@@ -57,14 +54,18 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              name: "Muhammad Zufar Natsir",
+              name: profile.name,
               url: "https://zufarnats.dev",
-              jobTitle: "Software & IoT Developer",
-              description:
-                "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
-              sameAs: [
-                "https://www.linkedin.com/in/muhammad-zufar-natsir-0b1353341",
-              ],
+              jobTitle: "Full-stack developer",
+              description,
+              worksFor: { "@type": "Organization", name: "Telkomsat" },
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Bogor",
+                addressCountry: "ID",
+              },
+              email: `mailto:${contactInfo.email}`,
+              sameAs: [contactInfo.linkedin, contactInfo.github],
               alumniOf: {
                 "@type": "CollegeOrUniversity",
                 name: "IPB University",
@@ -74,7 +75,7 @@ export default function RootLayout({
         />
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-[var(--color-accent)] focus:text-[var(--color-bg)] focus:rounded-lg focus:font-body focus:font-semibold focus:text-sm focus:outline-none"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-bg"
         >
           Skip to content
         </a>

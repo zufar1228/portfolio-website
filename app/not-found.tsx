@@ -1,34 +1,24 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import Container from "@/components/ui/Container";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[var(--color-bg)]">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="space-y-6 max-w-md"
-      >
-        <span className="font-headline text-8xl sm:text-9xl font-bold text-[var(--color-accent)]/20">
-          404
-        </span>
-        <h1 className="font-headline text-2xl sm:text-3xl font-bold text-[var(--color-text)]">
-          Page not found
+    <main className="flex min-h-screen items-center">
+      <Container>
+        <p className="type-reading text-5xl text-muted">404</p>
+        <h1 className="type-display mt-4 max-w-[16ch] text-[clamp(2rem,5vw,3.5rem)]">
+          There&apos;s no page at this address.
         </h1>
-        <p className="font-body text-base text-[var(--color-text-secondary)] leading-relaxed">
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
+        <p className="mt-4 max-w-[48ch] text-muted">
+          The link may be old, or the address may have a typo. Everything on this site lives on the home page.
         </p>
-        <a
+        <Link
           href="/"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-[var(--color-bg)] rounded-xl font-body font-semibold transition-transform active:scale-[0.97] hover:opacity-90"
+          className="mt-8 inline-block rounded-[4px] bg-ink px-5 py-3 font-medium text-bg transition-opacity hover:opacity-85"
         >
-          <ArrowLeft size={16} />
-          Back to home
-        </a>
-      </motion.div>
-    </div>
+          Go to the home page
+        </Link>
+      </Container>
+    </main>
   );
 }

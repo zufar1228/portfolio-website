@@ -1,325 +1,201 @@
 "use client";
 
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState, useCallback } from "react";
-import { Mail, Phone, MapPin, ArrowUpRight, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { contactInfo } from "@/lib/data";
 import Container from "../ui/Container";
-import Reveal from "../ui/Reveal";
-import TextReveal from "../ui/TextReveal";
-import SpotlightCard from "../ui/SpotlightCard";
-import AnimatedBorderCard from "../ui/AnimatedBorderCard";
-import GridPattern from "../ui/GridPattern";
+
+type Status =
+  | { state: "idle" }
+  | { state: "sending" }
+  | { state: "sent"; email: string }
+  | { state: "error"; message: string };
+
+type Errors = Partial<Record<"name" | "email" | "message", string>>;
+
+function validate(name: string, email: string, message: string): Errors {
+  const errors: Errors = {};
+  if (name.trim().length < 2) errors.name = "Enter your name.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = "Enter an email address like name@example.com.";
+  if (message.trim().length < 10) errors.message = "Write at least 10 characters so I know what it's about.";
+  return errors;
+}
+
+const fieldClass =
+  "mt-2 w-full rounded-[4px] border bg-surface px-3.5 py-2.5 text-ink placeholder:text-muted/70 focus:border-ink focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2";
 
 export default function Contact() {
-  const [formState, setFormState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const [status, setStatus] = useState<Status>({ state: "idle" });
+  const [errors, setErrors] = useState<Errors>({});
 
-  const showToast = useCallback((type: "success" | "error", message: string) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), 4000);
-  }, []);
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const message = String(data.get("message") ?? "");
+    const website = String(data.get("website") ?? "");
 
-  const validate = useCallback((name: string, email: string, message: string) => {
-    const errs: Record<string, string> = {};
-    if (!name.trim() || name.trim().length < 2) errs.name = "Name must be at least 2 characters";
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Please enter a valid email";
-    if (!message.trim() || message.trim().length < 10) errs.message = "Message must be at least 10 characters";
-    return errs;
-  }, []);
+    if (website) return;
+
+    const found = validate(name, email, message);
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      const first = Object.keys(found)[0];
+      (form.elements.namedItem(first) as HTMLElement | null)?.focus();
+      return;
+    }
+
+    setStatus({ state: "sending" });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (!res.ok) throw new Error("server");
+      form.reset();
+      setStatus({ state: "sent", email });
+    } catch (err) {
+      setStatus({
+        state: "error",
+        message:
+          err instanceof Error && err.message === "server"
+            ? `The message didn't go through. Try again, or email ${contactInfo.email} directly.`
+            : `The message didn't go through because the connection dropped. Check your connection and try again.`,
+      });
+    }
+  }
+
+  const clearError = (field: keyof Errors) => {
+    if (!errors[field]) return;
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
 
   return (
-    <section id="contact" className="py-16 sm:py-32 relative overflow-hidden" ref={ref}>
-      {/* Animated grid background */}
-      <div className="absolute inset-0 bg-[var(--color-bg-alt)]" />
-      <GridPattern width={70} height={70} numSquares={6} maxOpacity={0.06} duration={5} />
+    <section id="contact" aria-labelledby="contact-title" className="border-t border-line py-20 sm:py-28">
+      <Container className="grid gap-14 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-5">
+          <h2 id="contact-title" className="type-heading text-[clamp(2rem,4vw,2.75rem)]">
+            Contact
+          </h2>
+          <p className="mt-3 max-w-[40ch] text-muted">Email is the quickest way to reach me.</p>
+          <a
+            href={`mailto:${contactInfo.email}`}
+            className="type-heading mt-6 inline-block break-all text-[clamp(1.35rem,3vw,2rem)] underline decoration-line decoration-1 underline-offset-[0.2em] transition-colors hover:decoration-ink"
+          >
+            {contactInfo.email}
+          </a>
 
-      <Container className="relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-          {/* Left side */}
-          <div className="lg:col-span-5 space-y-10">
-            <Reveal>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-headline text-sm text-[var(--color-accent)] font-medium">04</span>
-                <span className="font-body text-xs tracking-widest text-[var(--color-text-secondary)] block">
-                  Contact
-                </span>
+          <dl className="mt-10 grid grid-cols-[6rem_1fr] gap-y-3 text-[0.9375rem]">
+            <dt className="text-muted">Phone</dt>
+            <dd>
+              <a href={contactInfo.phoneHref} className="link nums">
+                {contactInfo.phone}
+              </a>
+            </dd>
+            <dt className="text-muted">Based in</dt>
+            <dd>{contactInfo.location}</dd>
+            <dt className="text-muted">Elsewhere</dt>
+            <dd className="flex flex-wrap gap-x-5">
+              <a href={contactInfo.linkedin} target="_blank" rel="noopener noreferrer" className="link">
+                LinkedIn
+              </a>
+              <a href={contactInfo.github} target="_blank" rel="noopener noreferrer" className="link">
+                GitHub
+              </a>
+            </dd>
+          </dl>
+        </div>
+
+        <div className="lg:col-span-7">
+          <h3 className="type-heading text-xl">Or leave a message here</h3>
+          <form className="mt-6 space-y-5" noValidate onSubmit={onSubmit}>
+            <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="text-sm font-medium">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                  onChange={() => clearError("name")}
+                  className={`${fieldClass} ${errors.name ? "border-danger" : "border-line"}`}
+                />
+                {errors.name && (
+                  <p id="name-error" className="mt-1.5 text-sm text-danger">
+                    {errors.name}
+                  </p>
+                )}
               </div>
-            </Reveal>
-            <TextReveal
-              text="Get in touch"
-              as="h2"
-              className="font-headline text-3xl sm:text-5xl md:text-6xl font-bold leading-tight"
-            />
-            <Reveal delay={0.2}>
-              <p className="font-body text-[var(--color-text-secondary)]">
-                Have a project in mind or just want to say hello? Feel free to reach out.
-              </p>
-            </Reveal>
-
-            <Reveal delay={0.3}>
-              <div className="space-y-4 pt-4">
-                {[
-                  {
-                    icon: Mail,
-                    label: "Email",
-                    value: contactInfo.email,
-                    href: `mailto:${contactInfo.email}`,
-                  },
-                  {
-                    icon: Phone,
-                    label: "Phone",
-                    value: contactInfo.phone,
-                    href: `tel:+6281211743607`,
-                  },
-                  {
-                    icon: MapPin,
-                    label: "Based in",
-                    value: contactInfo.location,
-                  },
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.4 + i * 0.1 }}
-                  >
-                    <SpotlightCard className="rounded-xl">
-                      <div className="flex items-center gap-4 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/30 hover:border-[var(--color-text-tertiary)]/30 transition-colors group">
-                      <div className="relative z-10 w-10 h-10 rounded-lg bg-[var(--color-bg-alt)] flex items-center justify-center group-hover:bg-[var(--color-accent)]/10 transition-colors">
-                        <item.icon size={16} className="text-[var(--color-text-secondary)]" />
-                      </div>
-                      <div className="relative z-10">
-                        <p className="font-body text-[11px] text-[var(--color-text-tertiary)] mb-0.5">
-                          {item.label}
-                        </p>
-                        {item.href ? (
-                          <a
-                            href={item.href}
-                            className="font-body text-sm font-medium hover:text-[var(--color-accent)] transition-colors"
-                          >
-                            {item.value}
-                          </a>
-                        ) : (
-                          <p className="font-body text-sm font-medium">{item.value}</p>
-                        )}
-                      </div>
-                    </div>
-                    </SpotlightCard>
-                  </motion.div>
-                ))}
+              <div>
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                  onChange={() => clearError("email")}
+                  className={`${fieldClass} ${errors.email ? "border-danger" : "border-line"}`}
+                />
+                {errors.email && (
+                  <p id="email-error" className="mt-1.5 text-sm text-danger">
+                    {errors.email}
+                  </p>
+                )}
               </div>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.5}>
-              <div className="flex gap-4 pt-2">
-                {[
-                  { label: "LinkedIn", href: contactInfo.linkedin },
-                  { label: "GitHub", href: contactInfo.github },
-                ].map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target={link.href !== "#" ? "_blank" : undefined}
-                    rel={link.href !== "#" ? "noopener noreferrer" : undefined}
-                    className="group/link flex items-center gap-1 font-body text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
-                  >
-                    {link.label}
-                    <ArrowUpRight
-                      size={12}
-                      className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
-                    />
-                  </a>
-                ))}
-              </div>
-            </Reveal>
-          </div>
+            <div>
+              <label htmlFor="message" className="text-sm font-medium">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={5}
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? "message-error" : undefined}
+                onChange={() => clearError("message")}
+                className={`${fieldClass} resize-y ${errors.message ? "border-danger" : "border-line"}`}
+              />
+              {errors.message && (
+                <p id="message-error" className="mt-1.5 text-sm text-danger">
+                  {errors.message}
+                </p>
+              )}
+            </div>
 
-          {/* Right side - Form */}
-          <Reveal delay={0.2} className="lg:col-span-7">
-            <AnimatedBorderCard innerClassName="relative overflow-hidden bg-[var(--color-surface)]/50">
-              {/* Decorative corner */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent)]/[0.03] blur-[40px] rounded-full" />
-
-              <form
-                className="relative z-10 space-y-8 p-8 md:p-10"
-                noValidate
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget;
-                  const formData = new FormData(form);
-                  const name = formData.get("name") as string;
-                  const email = formData.get("email") as string;
-                  const message = formData.get("message") as string;
-                  const honeypot = formData.get("website") as string;
-
-                  // Bot check
-                  if (honeypot) return;
-
-                  const errs = validate(name, email, message);
-                  setErrors(errs);
-                  if (Object.keys(errs).length > 0) return;
-
-                  setFormState("sending");
-                  try {
-                    const res = await fetch("/api/contact", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ name, email, message }),
-                    });
-                    if (res.ok) {
-                      setFormState("sent");
-                      form.reset();
-                      setErrors({});
-                      showToast("success", "Message sent successfully! I'll get back to you soon.");
-                      setTimeout(() => setFormState("idle"), 4000);
-                    } else {
-                      setFormState("error");
-                      showToast("error", "Failed to send message. Please try again.");
-                      setTimeout(() => setFormState("idle"), 3000);
-                    }
-                  } catch {
-                    setFormState("error");
-                    showToast("error", "Network error. Please check your connection.");
-                    setTimeout(() => setFormState("idle"), 3000);
-                  }
-                }}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <button
+                type="submit"
+                disabled={status.state === "sending"}
+                className="rounded-[4px] bg-ink px-5 py-3 font-medium text-bg transition-opacity hover:opacity-85 disabled:opacity-60"
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Honeypot — hidden from humans, traps bots */}
-                  <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="font-body text-xs text-[var(--color-text-secondary)]">
-                      Full Name
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      required
-                      placeholder="John Doe"
-                      aria-describedby={errors.name ? "name-error" : undefined}
-                      aria-invalid={!!errors.name}
-                      onChange={() => errors.name && setErrors((p) => { const { name: _, ...rest } = p; return rest; })}
-                      className={`w-full bg-[var(--color-bg-alt)] border ${errors.name ? "border-red-500" : "border-[var(--color-border)]"} rounded-xl py-3 px-4 focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-colors font-body text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none input-focus-glow`}
-                    />
-                    {errors.name && (
-                      <p id="name-error" role="alert" className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
-                        <AlertCircle size={12} /> {errors.name}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="font-body text-xs text-[var(--color-text-secondary)]">
-                      Email Address
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="john@example.com"
-                      aria-describedby={errors.email ? "email-error" : undefined}
-                      aria-invalid={!!errors.email}
-                      onChange={() => errors.email && setErrors((p) => { const { email: _, ...rest } = p; return rest; })}
-                      className={`w-full bg-[var(--color-bg-alt)] border ${errors.email ? "border-red-500" : "border-[var(--color-border)]"} rounded-xl py-3 px-4 focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-colors font-body text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none input-focus-glow`}
-                    />
-                    {errors.email && (
-                      <p id="email-error" role="alert" className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
-                        <AlertCircle size={12} /> {errors.email}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="message" className="font-body text-xs text-[var(--color-text-secondary)]">
-                    Your Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    required
-                    placeholder="Tell me about your project..."
-                    aria-describedby={errors.message ? "message-error" : undefined}
-                    aria-invalid={!!errors.message}
-                    onChange={() => errors.message && setErrors((p) => { const { message: _, ...rest } = p; return rest; })}
-                    className={`w-full bg-[var(--color-bg-alt)] border ${errors.message ? "border-red-500" : "border-[var(--color-border)]"} rounded-xl py-3 px-4 focus:ring-1 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-colors font-body text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none resize-none input-focus-glow`}
-                  />
-                  {errors.message && (
-                    <p id="message-error" role="alert" className="flex items-center gap-1 text-xs text-red-400 font-body mt-1">
-                      <AlertCircle size={12} /> {errors.message}
-                    </p>
-                  )}
-                </div>
-
-                <motion.button
-                  type="submit"
-                  disabled={formState === "sending"}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group relative w-full py-4 bg-[var(--color-accent)] text-[var(--color-bg)] rounded-xl font-body font-semibold tracking-wide overflow-hidden transition-all flex items-center justify-center gap-2 disabled:opacity-70"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                  {formState === "sent" ? (
-                    <>
-                      <CheckCircle size={16} />
-                      Message Sent!
-                    </>
-                  ) : formState === "sending" ? (
-                    <>
-                      <motion.span
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="inline-block"
-                      >
-                        <Send size={16} />
-                      </motion.span>
-                      Sending...
-                    </>
-                  ) : formState === "error" ? (
-                    <>
-                      Something went wrong
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} />
-                      Send Message
-                    </>
-                  )}
-                  </span>
-                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                </motion.button>
-              </form>
-            </AnimatedBorderCard>
-          </Reveal>
+                {status.state === "sending" ? "Sending message…" : "Send message"}
+              </button>
+              <p role="status" aria-live="polite" className="text-[0.9375rem]">
+                {status.state === "sent" && <>Message sent. I&apos;ll reply to {status.email}.</>}
+                {status.state === "error" && <span className="text-danger">{status.message}</span>}
+              </p>
+            </div>
+          </form>
         </div>
       </Container>
-
-      {/* Toast notification */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 40 }}
-            className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-xl font-body text-sm font-medium shadow-lg backdrop-blur-sm border ${
-              toast.type === "success"
-                ? "bg-green-900/80 border-green-700/50 text-green-200"
-                : "bg-red-900/80 border-red-700/50 text-red-200"
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              {toast.type === "success" ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
-              {toast.message}
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
