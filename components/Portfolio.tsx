@@ -365,9 +365,8 @@ export default function Portfolio() {
       </a>
       <header ref={headerRef} className="site-header">
         <nav className="site-nav" aria-label="Primary">
-          <a href="#top" className="brand">
-            <span className="sq" style={{ width: 12, height: 12 }} />
-            Zufar Natsir
+          <a href="#top" className="brand" aria-label="Muhammad Zufar Natsir">
+            <span className="brand-mark">MZN.</span>
           </a>
           <div ref={navRef} className="nav-links">
             <span data-navbar="1" aria-hidden="true" className="nav-bar" />
