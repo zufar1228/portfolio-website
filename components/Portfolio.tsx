@@ -406,7 +406,7 @@ export default function Portfolio() {
                 <div data-reveal="wipe" className="rule-row eyebrow">
                   <span>{c.hero.kicker}</span>
                   <span className="status">
-                    <span className="sq" style={{ width: 8, height: 8 }} />
+                    <span className="sq" style={{ width: "calc(8 * var(--u))", height: "calc(8 * var(--u))" }} />
                     {c.hero.status}
                   </span>
                 </div>
@@ -427,7 +427,7 @@ export default function Portfolio() {
                 </h1>
               </div>
               <div data-reveal="up" data-d="750" className="hero-intro">
-                <p className="hero-role eyebrow" style={{ fontSize: 13 }}>
+                <p className="hero-role eyebrow" style={{ fontSize: "calc(13 * var(--u))" }}>
                   {c.hero.role}
                 </p>
                 <p className="hero-statement">{c.hero.statement}</p>
@@ -448,7 +448,7 @@ export default function Portfolio() {
                 data-reveal="wipe"
                 data-d="150"
                 className="eyebrow"
-                style={{ borderTop: "2px solid var(--color-text)", paddingTop: 10, display: "flex", justifyContent: "space-between" }}
+                style={{ borderTop: "2px solid var(--color-text)", paddingTop: "calc(10 * var(--u))", display: "flex", justifyContent: "space-between" }}
               >
                 <span>Fig. 01</span>
                 <span>{c.hero.figTag}</span>
@@ -647,7 +647,7 @@ export default function Portfolio() {
             <div className="cells skills">
               {c.skills.groups.map((g, i) => (
                 <div key={i} data-reveal="up" data-d="150" data-i={i} className="cell skill-group">
-                  <h3 className="eyebrow muted-60" style={{ fontSize: 13 }}>
+                  <h3 className="eyebrow muted-60" style={{ fontSize: "calc(13 * var(--u))" }}>
                     {g.title}
                   </h3>
                   <div className="skill-list">
