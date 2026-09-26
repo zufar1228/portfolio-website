@@ -81,6 +81,7 @@ export default function Portfolio() {
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [honeypot, setHoneypot] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const headerRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
@@ -367,14 +368,14 @@ export default function Portfolio() {
         Skip to content
       </a>
       <header ref={headerRef} className="site-header">
-        <nav className="site-nav" aria-label="Primary">
-          <a href="#top" className="brand" aria-label="Muhammad Zufar Natsir">
+        <nav className="site-nav" aria-label="Primary" data-open={menuOpen || undefined}>
+          <a href="#top" className="brand" aria-label="Muhammad Zufar Natsir" onClick={() => setMenuOpen(false)}>
             <span className="brand-mark">MZN.</span>
           </a>
-          <div ref={navRef} className="nav-links">
+          <div ref={navRef} id="site-menu" className="nav-links">
             <span data-navbar="1" aria-hidden="true" className="nav-bar" />
             {SECTIONS.map((id) => (
-              <a key={id} href={`#${id}`} data-nav={id}>
+              <a key={id} href={`#${id}`} data-nav={id} onClick={() => setMenuOpen(false)}>
                 {c.nav[id]}
               </a>
             ))}
@@ -390,6 +391,15 @@ export default function Portfolio() {
             </div>
             <button type="button" onClick={toggleTheme} className="theme-btn">
               {theme === "dark" ? c.themeDark : c.themeLight}
+            </button>
+            <button
+              type="button"
+              className="menu-btn"
+              aria-expanded={menuOpen}
+              aria-controls="site-menu"
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              {menuOpen ? c.menuClose : c.menu}
             </button>
           </div>
         </nav>

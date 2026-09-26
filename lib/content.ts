@@ -3,6 +3,8 @@ export type Lang = "en" | "id";
 export const COPY = {
   en: {
     themeLight: "Dark",
+    menu: "Menu",
+    menuClose: "Close",
     themeDark: "Light",
     nav: { services: "Services", work: "Work", experience: "Experience", toolkit: "Toolkit", contact: "Contact" },
     hero: {
@@ -84,6 +86,8 @@ export const COPY = {
   },
   id: {
     themeLight: "Gelap",
+    menu: "Menu",
+    menuClose: "Tutup",
     themeDark: "Terang",
     nav: { services: "Layanan", work: "Karya", experience: "Pengalaman", toolkit: "Tools", contact: "Kontak" },
     hero: {
