@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Muhammad Zufar Natsir — Software & IoT Developer";
+export const alt = "Muhammad Zufar Natsir — Full-Stack & IoT Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#1a1714",
+          background: "#f3f2f2",
           fontFamily: "system-ui, sans-serif",
         }}
       >
@@ -25,7 +25,7 @@ export default async function Image() {
           style={{
             width: 60,
             height: 3,
-            backgroundColor: "#c9a96e",
+            backgroundColor: "#ec3013",
             marginBottom: 32,
             borderRadius: 2,
           }}
@@ -36,7 +36,7 @@ export default async function Image() {
           style={{
             fontSize: 64,
             fontWeight: 700,
-            color: "#f0ebe3",
+            color: "#201e1d",
             lineHeight: 1.1,
             letterSpacing: "-0.02em",
             marginBottom: 16,
@@ -49,19 +49,19 @@ export default async function Image() {
         <div
           style={{
             fontSize: 28,
-            color: "#a09888",
+            color: "#605d5d",
             fontWeight: 400,
             marginBottom: 40,
           }}
         >
-          Software &amp; IoT Developer
+          Full-Stack &amp; IoT Engineer
         </div>
 
         {/* Description */}
         <div
           style={{
             fontSize: 20,
-            color: "#7a7268",
+            color: "#7d7979",
             maxWidth: 700,
             lineHeight: 1.5,
           }}
@@ -78,7 +78,7 @@ export default async function Image() {
             right: 80,
             fontSize: 80,
             fontWeight: 700,
-            color: "#c9a96e",
+            color: "#ec3013",
             opacity: 0.15,
           }}
         >

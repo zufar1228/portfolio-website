@@ -1,42 +1,37 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Plus_Jakarta_Sans, Geist } from "next/font/google";
-import Providers from "@/components/Providers";
+import { Archivo } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans',display:'swap'});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-headline",
+const archivo = Archivo({
   subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-  display: "swap",
-});
+const description =
+  "Full-stack engineer writing the software between field sensors and the people who act on them — MQTT pipelines, APIs, and monitoring dashboards.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://zufarnats.dev"),
-  title: "Muhammad Zufar Natsir | Software & IoT Developer",
-  description:
-    "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights — from warehouse monitoring to geolocation asset tracking.",
+  title: "Muhammad Zufar Natsir | Full-Stack & IoT Engineer",
+  description,
   openGraph: {
-    title: "Muhammad Zufar Natsir | Software & IoT Developer",
-    description:
-      "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
+    title: "Muhammad Zufar Natsir | Full-Stack & IoT Engineer",
+    description,
     type: "website",
     siteName: "Zufar Natsir Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Zufar Natsir | Software & IoT Developer",
-    description:
-      "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
+    title: "Muhammad Zufar Natsir | Full-Stack & IoT Engineer",
+    description,
   },
 };
+
+// Runs before paint: applies the saved/system theme and arms the reveal
+// animations so content never flashes in its final state first.
+const initScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('zn-theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';if(t==='dark')d.setAttribute('data-theme','dark');var l=localStorage.getItem('zn-lang');if(l==='en'||l==='id')d.lang=l;}catch(e){}try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'animate' in d)d.classList.add('rv');}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -44,41 +39,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn(spaceGrotesk.variable, plusJakarta.variable, "font-sans", geist.variable)}
-      suppressHydrationWarning
-    >
-      <body className="relative min-h-screen overflow-x-hidden">
+    <html lang="en" className={archivo.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: initScript }} />
+      </head>
+      <body>
         <script
           type="application/ld+json"
-          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
               name: "Muhammad Zufar Natsir",
               url: "https://zufarnats.dev",
-              jobTitle: "Software & IoT Developer",
-              description:
-                "I build backend systems and IoT solutions that turn real-world sensor data into actionable insights.",
+              jobTitle: "Full-Stack Engineer",
+              worksFor: { "@type": "Organization", name: "PT Telkom Satelit Indonesia" },
+              description,
               sameAs: [
                 "https://www.linkedin.com/in/muhammad-zufar-natsir-0b1353341",
+                "https://github.com/zufar1228",
               ],
-              alumniOf: {
-                "@type": "CollegeOrUniversity",
-                name: "IPB University",
-              },
+              alumniOf: { "@type": "CollegeOrUniversity", name: "IPB University" },
             }),
           }}
         />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-[var(--color-accent)] focus:text-[var(--color-bg)] focus:rounded-lg focus:font-body focus:font-semibold focus:text-sm focus:outline-none"
-        >
-          Skip to content
-        </a>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );
