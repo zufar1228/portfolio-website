@@ -1,30 +1,51 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useSyncExternalStore } from "react";
-import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  // false during SSR, true once hydrated: avoids a theme icon mismatch
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  if (!mounted) return <span className="block size-9" aria-hidden />;
+  useEffect(() => setMounted(true), []);
 
-  const isDark = resolvedTheme === "dark";
+  if (!mounted) return <div className="w-5 h-5" />;
+
+  const isDark = theme === "dark";
 
   return (
     <button
-      type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className="no-print -mr-2 grid size-9 place-items-center rounded text-muted transition-colors hover:text-ink"
+      aria-label="Toggle theme"
+      className="relative w-5 h-5 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors duration-300"
     >
-      {isDark ? <Sun size={18} strokeWidth={1.75} /> : <Moon size={18} strokeWidth={1.75} />}
+      <AnimatePresence mode="wait" initial={false}>
+        {isDark ? (
+          <motion.span
+            key="sun"
+            initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
+            animate={{ rotate: 0, opacity: 1, scale: 1 }}
+            exit={{ rotate: 90, opacity: 0, scale: 0.6 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Sun size={18} />
+          </motion.span>
+        ) : (
+          <motion.span
+            key="moon"
+            initial={{ rotate: 90, opacity: 0, scale: 0.6 }}
+            animate={{ rotate: 0, opacity: 1, scale: 1 }}
+            exit={{ rotate: -90, opacity: 0, scale: 0.6 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Moon size={18} />
+          </motion.span>
+        )}
+      </AnimatePresence>
     </button>
   );
 }

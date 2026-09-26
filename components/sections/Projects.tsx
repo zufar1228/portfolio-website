@@ -1,0 +1,378 @@
+"use client";
+
+import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
+import { useRef, useState, useEffect, useMemo, memo, useCallback } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { useTheme } from "next-themes";
+import { projects, Project } from "@/lib/data";
+import MagneticWrap from "../ui/MagneticWrap";
+
+export default function Projects() {
+  const scrollRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ["start start", "end end"],
+  });
+
+  const [scrollRange, setScrollRange] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const count = projects.length;
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Show "Keep scrolling!" after 2s idle, hide on scroll
+  const resetIdleTimer = useCallback(() => {
+    setShowScrollHint(false);
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => setShowScrollHint(true), 2000);
+  }, []);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const idx = Math.min(count - 1, Math.floor(v * count));
+    setActiveIndex((prev) => (prev !== idx ? idx : prev));
+    // Show dot while scrolling
+    setIsScrolling(true);
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    scrollTimerRef.current = setTimeout(() => setIsScrolling(false), 300);
+    // Hide hint on scroll, restart idle timer — but not at very end
+    if (v < 0.95) resetIdleTimer();
+    else {
+      setShowScrollHint(false);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    }
+  });
+
+  useEffect(() => {
+    const measure = () => {
+      if (trackRef.current) {
+        const trackWidth = trackRef.current.scrollWidth;
+        const viewWidth = window.innerWidth;
+        setScrollRange(Math.max(0, trackWidth - viewWidth));
+      }
+    };
+    measure();
+    let resizeRaf: number;
+    const debouncedMeasure = () => {
+      cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(measure);
+    };
+    window.addEventListener("resize", debouncedMeasure);
+    return () => window.removeEventListener("resize", debouncedMeasure);
+  }, []);
+
+  // Cleanup idle & scroll timers
+  useEffect(() => {
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    };
+  }, []);
+
+  // Build snap-point input/output arrays
+  const { inputRange, outputRange } = useMemo(() => {
+    const inp: number[] = [];
+    const out: number[] = [];
+    const segSize = 1 / count;
+    const hold = 0.5;
+    const ease = (1 - hold) / 2;
+
+    for (let i = 0; i < count; i++) {
+      const segStart = i * segSize;
+      const snapPos = -(i * (scrollRange / (count - 1 || 1)));
+      inp.push(segStart);
+      out.push(i === 0 ? 0 : -(((i - 1) * scrollRange) / (count - 1 || 1)));
+      inp.push(segStart + ease * segSize);
+      out.push(snapPos);
+      inp.push(segStart + (ease + hold) * segSize);
+      out.push(snapPos);
+    }
+    inp.push(1);
+    out.push(-scrollRange);
+
+    return { inputRange: inp, outputRange: out };
+  }, [scrollRange, count]);
+
+  const rawX = useTransform(scrollYProgress, inputRange, outputRange);
+  const x = useSpring(rawX, { stiffness: 400, damping: 40, mass: 0.5 });
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  return (
+    <section
+      id="projects"
+      ref={scrollRef}
+      className="relative"
+      style={{ height: `${(projects.length + 1) * 100}vh` }}
+    >
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
+        {/* Top bar */}
+          <div className="px-4 sm:px-6 md:px-12 lg:px-16 pt-6 sm:pt-8 pb-3 sm:pb-4 flex items-end justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <span className="font-headline text-sm text-[var(--color-accent)] font-medium">02</span>
+              <span className="font-body text-xs tracking-widest text-[var(--color-text-secondary)] block">
+                Projects
+              </span>
+            </div>
+            <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl font-bold">
+              Selected works
+            </h2>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-body text-[var(--color-text-tertiary)]">
+            {/* Dot indicators */}
+            <div className="hidden sm:flex items-center gap-2">
+              {projects.map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-full bg-[var(--color-accent)] h-1.5 transition-all duration-300 ease-out"
+                  style={{
+                    width: activeIndex === i ? 24 : 6,
+                    opacity: activeIndex === i ? 1 : 0.3,
+                  }}
+                />
+              ))}
+            </div>
+            <span>
+              {String(activeIndex + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span>→</span>
+              <span className="hidden sm:inline">Scroll to explore</span>
+            </div>
+          </div>
+        </div>
+        {/* Progress bar */}
+          <div className="mx-4 sm:mx-6 md:mx-12 lg:mx-16 h-px bg-[var(--color-border)] relative">
+          <motion.div
+            className="h-full bg-[var(--color-accent)] relative"
+            style={{ width: progressWidth }}
+          >
+            {/* Solid dot — visible only while scrolling */}
+            <div
+              className="absolute right-0 top-1/2 transition-[opacity,transform] duration-300 ease-out"
+              style={{
+                opacity: isScrolling ? 1 : 0,
+                transform: `translateX(50%) translateY(-50%) scale(${isScrolling ? 1 : 0.3})`,
+              }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Full-screen horizontal scroll track */}
+        <motion.div
+          ref={trackRef}
+          style={{ x }}
+          className="flex-1 flex items-stretch gap-0 mt-4"
+        >
+          {projects.map((project, i) => (
+            <FullScreenCard
+              key={project.title}
+              project={project}
+              index={i}
+              total={projects.length}
+              isActive={activeIndex === i}
+              theme={theme}
+              mounted={mounted}
+            />
+          ))}
+
+        </motion.div>
+
+        {/* Keep scrolling hint */}
+        <div
+          className="absolute top-20 sm:top-22 left-1/2 -translate-x-1/2 transition-all duration-500"
+          style={{ opacity: showScrollHint ? 1 : 0, transform: `translateX(-50%) translateY(${showScrollHint ? 0 : -10}px)`, pointerEvents: "none" }}
+        >
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--color-accent)]/20 bg-[var(--color-surface)]/80">
+            <span className="text-sm">🐹</span>
+            <span className="text-xs font-body text-[var(--color-text-secondary)]">
+              Psst… keep scrolling, there&apos;s more!
+            </span>
+            <span className="text-xs animate-bounce">↓</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const FullScreenCard = memo(function FullScreenCard({
+  project,
+  index,
+  total,
+  isActive,
+  theme,
+  mounted,
+}: {
+  project: Project;
+  index: number;
+  total: number;
+  isActive: boolean;
+  theme?: string;
+  mounted: boolean;
+}) {
+  const imageSrc = useMemo(() => {
+    if (!mounted) return project.image;
+    
+    // Experiment: Always use light image for both themes if available
+    if (theme === "dark" && project.imageLight) {
+      return project.imageLight;
+    }
+    if (theme === "light" && project.imageLight) {
+      return project.imageLight;
+    }
+    
+    return project.image;
+  }, [mounted, theme, project]);
+
+  return (
+    <div className="w-screen shrink-0 flex items-stretch px-2 sm:px-3 md:px-6 pb-4 sm:pb-6">
+      <div
+        className="relative flex-1 rounded-2xl overflow-hidden border bg-[var(--color-surface)]/30 group transition-[border-color,opacity] duration-500 ease-out"
+        style={{
+          borderColor: isActive ? "var(--color-accent)" : "var(--color-border)",
+          opacity: isActive ? 1 : 0.6,
+        }}
+      >
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src={imageSrc}
+            alt={project.title}
+            fill
+            sizes="100vw"
+            className="object-cover transition-opacity duration-700"
+            priority={index === 0}
+          />
+        </div>
+
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 w-3/4 bg-gradient-to-r from-[var(--color-bg)]/95 via-[var(--color-bg)]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)]/70 via-transparent to-transparent" />
+
+        {/* Active indicator — accent side bar */}
+        <div
+          className="absolute left-0 top-[10%] bottom-[10%] w-[3px] rounded-full bg-[var(--color-accent)] transition-all duration-400"
+          style={{ opacity: isActive ? 1 : 0, transform: `scaleY(${isActive ? 1 : 0})` }}
+        />
+
+        {/* Content overlay */}
+        <div className="relative z-10 h-full flex flex-col justify-end p-4 sm:p-6 md:p-10 lg:p-14 max-w-2xl">
+
+          {/* Featured badge */}
+          <div
+            className="relative flex items-center gap-3 mb-4 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.4, transform: `translateY(${isActive ? 0 : 10}px)` }}
+          >
+            {index === 0 && (
+              <span className="px-3 py-1 text-[10px] font-body tracking-widest uppercase bg-[var(--color-accent)]/10 text-[var(--color-accent)] rounded-full border border-[var(--color-accent)]/20">
+                Featured
+              </span>
+            )}
+          </div>
+
+          <h3
+            className="relative font-headline text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-2 sm:mb-3 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.4, transform: `translateY(${isActive ? 0 : 12}px)` }}
+          >
+            {project.title}
+          </h3>
+
+          <p
+            className="relative font-body text-[var(--color-text)] text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-5 line-clamp-2 sm:line-clamp-3 md:line-clamp-none transition-all duration-500"
+            style={{ opacity: isActive ? 0.8 : 0.3, transform: `translateY(${isActive ? 0 : 14}px)` }}
+          >
+            {project.description}
+          </p>
+
+          {/* Tags */}
+          <div
+            className="relative flex flex-wrap gap-2 mb-6 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.3, transform: `translateY(${isActive ? 0 : 16}px)` }}
+          >
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 text-xs font-body bg-[var(--color-bg)] text-[var(--color-text)] rounded-full border border-[var(--color-border)]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Links */}
+          <div
+            className="relative flex flex-wrap gap-4 sm:gap-6 transition-all duration-500"
+            style={{ opacity: isActive ? 1 : 0.3, transform: `translateY(${isActive ? 0 : 18}px)` }}
+          >
+            {project.demoUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-accent)] hover:text-[var(--color-text)] transition-colors"
+                >
+                  Live Demo
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
+            {project.sourceUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+                >
+                  {project.backendUrl ? "Frontend" : "Source Code"}
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
+            {project.backendUrl && (
+              <MagneticWrap strength={0.2}>
+                <a
+                  href={project.backendUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/link flex items-center gap-1.5 text-sm font-semibold font-body text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+                >
+                  Backend
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              </MagneticWrap>
+            )}
+          </div>
+        </div>
+
+        {/* Right-side counter */}
+        <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 font-headline text-xs text-[var(--color-text-tertiary)]">
+          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+        </div>
+      </div>
+    </div>
+  );
+});

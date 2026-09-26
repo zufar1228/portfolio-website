@@ -1,19 +1,11 @@
 import { ImageResponse } from "next/og";
-import { heroTrace, profile } from "@/lib/data";
 
-export const alt = `${profile.name}, full-stack developer`;
+export const runtime = "edge";
+export const alt = "Muhammad Zufar Natsir — Software & IoT Developer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
-  const { values } = heroTrace;
-  const w = 1040;
-  const h = 150;
-  const d = values
-    .map((v, i) => `${i === 0 ? "M" : "L"}${((i / (values.length - 1)) * w).toFixed(1)} ${(8 + (1 - v) * (h - 16)).toFixed(1)}`)
-    .join(" ");
-  const endY = 8 + (1 - values[values.length - 1]) * (h - 16);
-
   return new ImageResponse(
     (
       <div
@@ -22,26 +14,75 @@ export default async function Image() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "72px 80px",
-          background: "#0c2228",
-          color: "#e3ebeb",
-          fontFamily: "sans-serif",
+          justifyContent: "center",
+          padding: "80px",
+          background: "#1a1714",
+          fontFamily: "system-ui, sans-serif",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 60, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.05 }}>
-            {profile.name}
-          </div>
-          <div style={{ fontSize: 30, color: "#98adb0", marginTop: 16 }}>
-            Full-stack developer at Telkomsat, Bogor
-          </div>
+        {/* Top accent line */}
+        <div
+          style={{
+            width: 60,
+            height: 3,
+            backgroundColor: "#c9a96e",
+            marginBottom: 32,
+            borderRadius: 2,
+          }}
+        />
+
+        {/* Name */}
+        <div
+          style={{
+            fontSize: 64,
+            fontWeight: 700,
+            color: "#f0ebe3",
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            marginBottom: 16,
+          }}
+        >
+          Muhammad Zufar Natsir
         </div>
-        <div style={{ display: "flex", position: "relative", width: w, height: h, borderBottom: "2px solid #2a4850" }}>
-          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
-            <path d={d} fill="none" stroke="#e3ebeb" strokeWidth={3} strokeLinejoin="round" />
-            <circle cx={w - 2} cy={endY} r={9} fill="#f2c230" stroke="#e3ebeb" strokeWidth={3} />
-          </svg>
+
+        {/* Title */}
+        <div
+          style={{
+            fontSize: 28,
+            color: "#a09888",
+            fontWeight: 400,
+            marginBottom: 40,
+          }}
+        >
+          Software &amp; IoT Developer
+        </div>
+
+        {/* Description */}
+        <div
+          style={{
+            fontSize: 20,
+            color: "#7a7268",
+            maxWidth: 700,
+            lineHeight: 1.5,
+          }}
+        >
+          Building backend systems and IoT solutions that turn real-world sensor
+          data into actionable insights.
+        </div>
+
+        {/* Bottom accent */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 60,
+            right: 80,
+            fontSize: 80,
+            fontWeight: 700,
+            color: "#c9a96e",
+            opacity: 0.15,
+          }}
+        >
+          MZN
         </div>
       </div>
     ),
